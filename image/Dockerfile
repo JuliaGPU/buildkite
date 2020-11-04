@@ -1,4 +1,4 @@
-ARG base=nvidia/cuda
+ARG base=ubuntu:latest
 FROM $base
 
 RUN apt-get update && \
