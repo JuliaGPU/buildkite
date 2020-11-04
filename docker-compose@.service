@@ -1,0 +1,16 @@
+[Unit]
+Description=%i container
+After=docker.service
+Requires=docker.service
+PartOf=docker.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+WorkingDirectory=/etc/docker/compose/%i
+ExecStartPre=/usr/local/bin/docker-compose build
+ExecStart=/usr/local/bin/docker-compose up -d
+ExecStop=/usr/local/bin/docker-compose down
+
+[Install]
+WantedBy=multi-user.target
