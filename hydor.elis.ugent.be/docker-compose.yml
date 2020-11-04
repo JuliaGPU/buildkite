@@ -15,8 +15,10 @@ services:
       NVIDIA_VISIBLE_DEVICES: "GPU-748e7ab6-e7a6-caaa-5c75-398395a2c80d"
       JULIA_NUM_THREADS: 3
     env_file: ../token.env
+    restart: unless-stopped
     command:
       - start
+      - --disconnect-after-job
       - --tags=queue=nvidia,cuda=10.0,cuda=10.1,cuda=10.2,cuda=11.0,cuda=9.0,cuda=9.2,cap=sm_61
       - --name=gtx1080.hydor.elis.ugent.be
     volumes:
@@ -34,8 +36,10 @@ services:
       NVIDIA_VISIBLE_DEVICES: "GPU-fa79b18d-3e09-142a-2493-bb83b07b0bdf"
       JULIA_NUM_THREADS: 4
     env_file: ../token.env
+    restart: unless-stopped
     command:
       - start
+      - --disconnect-after-job
       - --tags=queue=nvidia,cuda=10.0,cuda=10.1,cuda=10.2,cuda=11.0,cuda=9.0,cuda=9.2,cap=sm_75
       - --name=rtx2080.hydor.elis.ugent.be
     volumes:
