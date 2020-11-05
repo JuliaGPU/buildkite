@@ -1,5 +1,21 @@
 # JuliaGPU Buildkite
 
+This repository contains resources related to the JuliaGPU Buildkite agents.
+There are several important differences from the upstream Buildkite agent image:
+
+- a custom Ubuntu-based image that can be based off of another image (e.g.
+  CUDA's images);
+- support for encrypted environment variables in the pipeline, and an
+  environment hook to decode them;
+- Docker Compose templates and systemd service files to tie everything together,
+  and give each job a safe and reproducible execution environment.
+
+Many of these features come from the fact that the JuliaGPU CI is intended to be
+run on a variety of repositories (and external PRs to those repositories),
+whereas Buildkite is typically used within the (trusted) boundaries of a single
+organization.
+
+
 ## Providing secrets
 
 During start-up, agents will scan for `SECRET_` environment variables and decode
