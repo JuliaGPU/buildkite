@@ -6,9 +6,9 @@ PartOf=docker.service
 
 [Service]
 Type=simple
-WorkingDirectory=/etc/buildkite/agents
-ExecStartPre=/usr/local/bin/docker-compose --file %i.yml build --quiet
-ExecStart=/usr/local/bin/docker-compose --file %i.yml up --force-recreate --exit-code-from buildkite
+WorkingDirectory=/etc/buildkite/agents/%i
+ExecStartPre=/usr/local/bin/docker-compose build --quiet
+ExecStart=/usr/local/bin/docker-compose up --force-recreate --exit-code-from buildkite
 Restart=on-success
 
 [Install]

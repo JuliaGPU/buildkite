@@ -6,7 +6,7 @@ version: "3.8"
 services:
   buildkite:
     build:
-      context: ../image/
+      context: ../../image/
       args:
         base: nvidia/cuda:11.0-cudnn8-devel-ubuntu18.04
     runtime: nvidia
@@ -14,7 +14,7 @@ services:
       NVIDIA_DRIVER_CAPABILITIES: "compute,utility"
       NVIDIA_VISIBLE_DEVICES: "GPU-fa79b18d-3e09-142a-2493-bb83b07b0bdf"
       JULIA_NUM_THREADS: 4
-    env_file: token.env
+    env_file: ../token.env
     command:
       - start
       - --disconnect-after-job
@@ -23,4 +23,3 @@ services:
       - --name=rtx2080.hydor.elis.ugent.be
     volumes:
       - /storage/buildkite/rtx2080:/root
-
