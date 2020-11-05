@@ -1,5 +1,36 @@
 # JuliaGPU Buildkite
 
+## Providing secrets
+
+During start-up, agents will scan for `SECRET_` environment variables and decode
+their contents using OpenSSL:
+
+```
+... | openssl base64 -d | openssl rsautl -decrypt -inkey secrets.private.key
+```
+
+If you want to use this mechanism to provide, say, a secret `CODECOV_TOKEN`, run
+the following command using the public key that is part of this repository:
+
+```
+$ echo SECRET_VALUE | openssl rsautl -encrypt -pubin -inkey secrets.public.key | openssl base64
+mOVpzB+EekkilXKIhaDv+iB4/s+OhFd4iGQdfivDBXKqxQ+hMYED0ic12H1CeAD2
+iaJytYOhDk5Cx6eVLPSypmcXH0+8BwPzLsxmPpgCq2qRdrzC9X6IjP6d5AnfERjm
+qZyjCBnz11sM45t4hGABZRzblqqyMaHss9EZrg7ztkvLtWeqLI4GIcQCdFUW6ooV
+k/XfVzt3IK36iEfErowrTWEFfZ1jskRXO91naCURPpPvM1bdEEXo+CdZhUa6XxWQ
++AvCEIgZQywth1PT1faRSxj6ouACJPr21mQpniVtoBvDm0BpUUNHdwibt4Cm6WqY
+95FzR8931CalRiCKYWjhxA==
+```
+
+You can safely put this value in the global environment of your `pipeline.yml`,
+appropriately prepending the target environment variable:
+
+```yaml
+env:
+  SECRET_VARIABLE: "mOVpzB+EekkilXKIhaDv+iB4/s+OhFd4iGQdfivDBXKqxQ+hMYED0ic12H1CeAD2iaJytYOhDk5Cx6eVLPSypmcXH0+8BwPzLsxmPpgCq2qRdrzC9X6IjP6d5AnfERjmqZyjCBnz11sM45t4hGABZRzblqqyMaHss9EZrg7ztkvLtWeqLI4GIcQCdFUW6ooVk/XfVzt3IK36iEfErowrTWEFfZ1jskRXO91naCURPpPvM1bdEEXo+CdZhUa6XxWQ+AvCEIgZQywth1PT1faRSxj6ouACJPr21mQpniVtoBvDm0BpUUNHdwibt4Cm6WqY95FzR8931CalRiCKYWjhxA=="
+```
+
+
 ## Adding an agent
 
 First, create a `docker-compose.yml` suitable for this host. The current approach is to
@@ -8,10 +39,15 @@ values) to a reasonable number for this system (each CUDA context takes a couple
 MBs, realistic test suites easily consume multiple GBs of VRAM, and each Julia process also
 consumes multiple GBs of system memory).
 
-On the agent host, clone this repository and add a `token.env` to the root:
+On the agent host, clone this repository and add an appropriate `token.env` and
+`secrets.private.key` to the root (these files are private and not part of the
+repository for obvious reasons):
 
 ```
 # git clone https://github.com/maleadt/buildkite-agents /opt/buildkite-agents
+# ...
+# chown root:root token.env secrets.private.key
+# chmod 600       token.env secrets.private.key
 ```
 
 Make sure a recent version of `docker-compose` is available:

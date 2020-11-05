@@ -6,7 +6,7 @@ services:
   # 6GB of VRAM
   titan:
     build:
-      context: ../image
+      context: ../
       args:
         base: nvidia/cuda:11.0-cudnn8-devel-ubuntu18.04
     runtime: nvidia
@@ -19,6 +19,7 @@ services:
     command:
       - start
       - --disconnect-after-job
+      - --hooks-path=/hooks
       - --tags=queue=juliagpu,cuda=10.0,cuda=10.1,cuda=10.2,cuda=11.0,cuda=9.0,cuda=9.2,cap=sm_35
       - --name=titan.ripper.elis.ugent.be
     volumes:

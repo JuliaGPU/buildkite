@@ -1,0 +1,17 @@
+#!/bin/bash
+set -euov pipefail
+
+
+echo "--- :key: Decrypting secrets"
+
+for secret_var in $(set | awk -F "=" '{print $1}' | grep "SECRET_"); do
+    var=${secret_var:7}
+    echo "Found secret for variable $var"
+
+    secret_val=${!secret_var}
+    val=$(echo $secret_val | openssl base64 -d | openssl rsautl -decrypt -inkey secrets.private.key)
+
+    export $(echo "$(echo $var)=$val")
+done
+
+rm /secrets.private.key
