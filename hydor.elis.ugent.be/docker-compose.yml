@@ -19,7 +19,7 @@ services:
     command:
       - start
       - --disconnect-after-job
-      - --tags=queue=nvidia,cuda=10.0,cuda=10.1,cuda=10.2,cuda=11.0,cuda=9.0,cuda=9.2,cap=sm_61
+      - --tags=queue=juliagpu,cuda=10.0,cuda=10.1,cuda=10.2,cuda=11.0,cuda=9.0,cuda=9.2,cap=sm_61
       - --name=gtx1080.hydor.elis.ugent.be
     volumes:
       - /storage/buildkite/gtx1080:/root
@@ -40,7 +40,7 @@ services:
     command:
       - start
       - --disconnect-after-job
-      - --tags=queue=nvidia,cuda=10.0,cuda=10.1,cuda=10.2,cuda=11.0,cuda=9.0,cuda=9.2,cap=sm_75
+      - --tags=queue=juliagpu,cuda=10.0,cuda=10.1,cuda=10.2,cuda=11.0,cuda=9.0,cuda=9.2,cap=sm_75
       - --name=rtx2080.hydor.elis.ugent.be
     volumes:
       - /storage/buildkite/rtx2080:/root
