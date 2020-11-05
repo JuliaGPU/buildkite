@@ -1,0 +1,15 @@
+[Unit]
+Description=Buildkite agent %i
+After=docker.service
+Requires=docker.service
+PartOf=docker.service
+
+[Service]
+Type=simple
+WorkingDirectory=/etc/buildkite/agents
+ExecStartPre=/usr/local/bin/docker-compose --file %i.yml build --quiet
+ExecStart=/usr/local/bin/docker-compose --file %i.yml up --force-recreate
+Restart=on-success
+
+[Install]
+WantedBy=multi-user.target

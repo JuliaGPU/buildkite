@@ -1,12 +1,12 @@
 version: "3.8"
 
-# ripper has a AMD Ryzen Threadripper 2990WX, 64 threads in total, with 64GB of RAM
+# ripper has a AMD Ryzen Threadripper 2990WX, 64 threads in total,
+# with 64GB of RAM, and 6GB of VRAM
 
 services:
-  # 6GB of VRAM
   titan:
     build:
-      context: ../
+      context: ../image/
       args:
         base: nvidia/cuda:11.0-cudnn8-devel-ubuntu18.04
     runtime: nvidia
@@ -14,8 +14,7 @@ services:
       NVIDIA_DRIVER_CAPABILITIES: "compute,utility"
       NVIDIA_VISIBLE_DEVICES: "GPU-a6bf77e4-bd78-16b3-6162-98b5ee866a6e"
       JULIA_NUM_THREADS: 2
-    env_file: ../token.env
-    restart: unless-stopped
+    env_file: token.env
     command:
       - start
       - --disconnect-after-job

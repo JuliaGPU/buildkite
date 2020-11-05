@@ -14,7 +14,4 @@ for secret_var in $(set | awk -F "=" '{print $1}' | grep "SECRET_"); do
     export $(echo "$(echo $var)=$val")
 done
 
-# TODO: remove the key
-#       this does not work, as docker's restart policy doesn't recreate the
-#       container, so this removal is persistent across jobs.
-#rm /secrets.private.key
+rm /secrets.private.key
