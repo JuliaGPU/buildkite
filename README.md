@@ -35,7 +35,7 @@ administrative priviliges on the repository you want to add CI to.
    package's name.
 
    a. Under `Git Repository`, select `Any account` and specify the package's HTTPS clone
-      URL, e.g. `https://github.com/JuliaGPU/CUDA.jl.git`.
+      URL, e.g. `https://github.com/JuliaGPU/CUDA.jl.git`. Do not use the `git://` URL!
 
    b. Remove the default step, instead adding the `Read steps from repository` action. Make
       sure to target the JuliaGPU queue under `Agent Targeting Rules` by specifying
