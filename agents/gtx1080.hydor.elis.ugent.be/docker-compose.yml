@@ -19,7 +19,8 @@ services:
       - start
       - --disconnect-after-job
       - --hooks-path=/hooks
-      - --tags=queue=juliagpu,cuda=10.0,cuda=10.1,cuda=10.2,cuda=11.0,cuda=9.0,cuda=9.2,cap=sm_61
+      - --tags=queue=juliagpu,cuda=10.0,cuda=10.1,cuda=10.2,cuda=11.0,cuda=9.0,cuda=9.2,cap=sm_61,xorg
       - --name=gtx1080.hydor.elis.ugent.be
     volumes:
       - /storage/buildkite/gtx1080:/root
+      - /tmp/.X11-unix:/tmp/.X11-unix:ro
