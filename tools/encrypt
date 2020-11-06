@@ -18,5 +18,5 @@ cat <<EOD
 Use the following snippet in your pipeline.yml:
 
 env:
-    SECRET_$var: "$encrypted"
+  SECRET_$var: "$encrypted"
 EOD
