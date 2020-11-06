@@ -22,6 +22,9 @@ on a system with a GPU. This is **not a general-purpose CI service**, and only i
 run GPU-related tests of Julia packages. For all other testing, use public infrastructure
 (Travis, Github Actions, etc).
 
+**NOTE: Buildkite for JuliaGPU CI is a recent development, and the set-up may still change.
+Keep an eye on this README if anything would break.**
+
 To enable the JuliaGPU CI for your repository, follow the steps below. Some of these steps
 are to be performed by an admin with access to the JuliaLang Buildkite instance, so you
 should ask on the Julia Discourse or Slack about that. Other steps generally need
