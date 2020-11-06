@@ -18,15 +18,10 @@ organization.
 
 ## Providing secrets
 
-During start-up, agents will scan for `SECRET_` environment variables and decode
-their contents using OpenSSL:
-
-```
-... | openssl base64 -d | openssl rsautl -decrypt -inkey secrets.private.key
-```
-
-If you want to use this mechanism to provide, say, a secret `CODECOV_TOKEN`, run
-the following command using the public key that is part of this repository:
+During start-up, agents will scan for `SECRET_` environment variables and decrypt their
+contents for use in the rest of the pipeline. If you want to use this mechanism to provide,
+say, a secret `CODECOV_TOKEN`, run the following command using the public key that is part
+of this repository:
 
 ```
 $ echo TOKEN_VALUE | openssl rsautl -encrypt -pubin -inkey secrets.public.key | openssl base64
@@ -38,8 +33,8 @@ k/XfVzt3IK36iEfErowrTWEFfZ1jskRXO91naCURPpPvM1bdEEXo+CdZhUa6XxWQ
 95FzR8931CalRiCKYWjhxA==
 ```
 
-You can safely put this value in the global environment of your `pipeline.yml`,
-appropriately prepending the target environment variable:
+You can now join and put this value in the global environment of your `pipeline.yml`,
+prepending the target environment variable with `SECRET_`:
 
 ```yaml
 env:
@@ -57,8 +52,7 @@ multiple GBs of VRAM, and each Julia process also consumes multiple GBs of
 system memory).
 
 On the agent host, clone this repository and add an appropriate `token.env` and
-`secrets.private.key`(these files are private and not part of the repository for
-obvious reasons):
+`secrets.private.key`(these files are not part of the repository for obvious reasons):
 
 ```
 # git clone https://github.com/maleadt/buildkite-agents /etc/buildkite
