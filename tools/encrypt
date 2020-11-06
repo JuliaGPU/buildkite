@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+
+read -p 'Variable name: ' var
+
+read -sp 'Secret value: ' val
+echo
+
+encrypted=$(echo $val |
+            openssl rsautl -encrypt -pubin -inkey $DIR/../image/secrets.public.key |
+            openssl base64 |
+            tr -d '\n')
+
+cat <<EOD
+
+Use the following snippet in your pipeline.yml:
+
+env:
+    SECRET_$var: "$encrypted"
+EOD

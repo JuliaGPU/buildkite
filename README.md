@@ -16,29 +16,23 @@ whereas Buildkite is typically used within the (trusted) boundaries of a single
 organization.
 
 
-## Providing secrets
+## Using secrets
 
 During start-up, agents will scan for `SECRET_` environment variables and decrypt their
 contents for use in the rest of the pipeline. If you want to use this mechanism to provide,
-say, a secret `CODECOV_TOKEN`, run the following command using the public key that is part
-of this repository:
+say, a secret `CODECOV_TOKEN`, run the `encrypt` script in this repository and follow its
+prompts:
+
 
 ```
-$ echo TOKEN_VALUE | openssl rsautl -encrypt -pubin -inkey secrets.public.key | openssl base64
-mOVpzB+EekkilXKIhaDv+iB4/s+OhFd4iGQdfivDBXKqxQ+hMYED0ic12H1CeAD2
-iaJytYOhDk5Cx6eVLPSypmcXH0+8BwPzLsxmPpgCq2qRdrzC9X6IjP6d5AnfERjm
-qZyjCBnz11sM45t4hGABZRzblqqyMaHss9EZrg7ztkvLtWeqLI4GIcQCdFUW6ooV
-k/XfVzt3IK36iEfErowrTWEFfZ1jskRXO91naCURPpPvM1bdEEXo+CdZhUa6XxWQ
-+AvCEIgZQywth1PT1faRSxj6ouACJPr21mQpniVtoBvDm0BpUUNHdwibt4Cm6WqY
-95FzR8931CalRiCKYWjhxA==
-```
+$ ./tools/encrypt
+Variable name: CODECOV_TOKEN
+Secret value:
 
-You can now join and put this value in the global environment of your `pipeline.yml`,
-prepending the target environment variable with `SECRET_`:
+Use the following snippet in your pipeline.yml:
 
-```yaml
 env:
-  SECRET_CODECOV_TOKEN: "mOVpzB+EekkilXKIhaDv+iB4/s+OhFd4iGQdfivDBXKqxQ+hMYED0ic12H1CeAD2iaJytYOhDk5Cx6eVLPSypmcXH0+8BwPzLsxmPpgCq2qRdrzC9X6IjP6d5AnfERjmqZyjCBnz11sM45t4hGABZRzblqqyMaHss9EZrg7ztkvLtWeqLI4GIcQCdFUW6ooVk/XfVzt3IK36iEfErowrTWEFfZ1jskRXO91naCURPpPvM1bdEEXo+CdZhUa6XxWQ+AvCEIgZQywth1PT1faRSxj6ouACJPr21mQpniVtoBvDm0BpUUNHdwibt4Cm6WqY95FzR8931CalRiCKYWjhxA=="
+    SECRET_CODECOV_TOKEN: "kaIXEN51HinaQ4JGclQcIgxeMMtXDb5uvnP3E2eKrH4Eruf2pKd5QwUGcIVL8+rcWeo5FWj883rNxRQEH3YeCWs6/i7vzs+ORvG51QeCNYQgNqFzPsWRcq5qJYc+JPFbisS7q9nghqWTwr52cnjarD4Xx3ceGorMyS5NvFpCNxMgqHNyGkLvipxcTTJfKZK61bpnbntoIjiIO1XSZKjcxnXFGFnolV9BHCr5v8f7F42n2tUH7X3nDHmTBr1AbO2lFAU9ra/KezHcIf0wg2HcV8LZD0+mj8q/SBPjQZSH7cxwx4Q2eTjT4Sw7xnrBGuySVm8ZPCAV7nRNEHo+VqR+GQ=="
 ```
 
 
