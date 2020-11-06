@@ -1,7 +1,6 @@
 # JuliaGPU Buildkite
 
-This repository contains resources related to the JuliaGPU Buildkite agents.
-There are several important differences from the upstream Buildkite agent image:
+This repository contains resources related to the JuliaGPU Buildkite CI infrastructure:
 
 - a custom Ubuntu-based image that can be based off of another image (e.g.
   CUDA's images);
