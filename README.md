@@ -130,6 +130,7 @@ Make sure a recent version of `docker-compose` is available:
 
 ```
 # curl -L "https://github.com/docker/compose/releases/download/1.27.4/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+# sudo chmod +x /usr/local/bin/docker-compose
 ```
 
 If running GPU jobs, make sure the [NVIDIA container
@@ -153,6 +154,7 @@ Install the `buildkite-agent` systemd unit:
 
 ```
 # ln -s /etc/buildkite/buildkite-agent@.service /etc/systemd/system/
+# systemctl daemon-reload
 ```
 
 Finally, enable and start the buildkite agents:
