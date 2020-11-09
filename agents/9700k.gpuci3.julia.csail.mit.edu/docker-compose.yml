@@ -3,7 +3,7 @@ version: "3.8"
 # gpuci3 has an i7-9700K, 8 threads in total, with an integrated UHD Graphics 630
 
 services:
-  titan:
+  buildkite:
     build:
       context: ../../image/
       args:

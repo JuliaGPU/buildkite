@@ -4,7 +4,7 @@ version: "3.8"
 # with 64GB of RAM, and 6GB of VRAM
 
 services:
-  titan:
+  buildkite:
     build:
       context: ../../image/
       args:
