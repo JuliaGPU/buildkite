@@ -65,10 +65,10 @@ administrative priviliges on the repository you want to add CI to.
    steps:
      - label: "Julia 1.5"
        plugins:
-         - maleadt/julia:
+         - JuliaCI/julia#v0.1:
              version: 1.5
-         - maleadt/julia-test: ~
-         - maleadt/julia-coverage:
+         - JuliaCI/julia-test#v0.1: ~
+         - JuliaCI/julia-coverage#v0.1:
              codecov: true
        agents:
          queue: "juliagpu"
@@ -120,7 +120,7 @@ On the agent host, clone this repository and add an appropriate `token.env` and
 `secrets.private.key`(these files are not part of the repository for obvious reasons):
 
 ```
-# git clone https://github.com/maleadt/buildkite-agents /etc/buildkite
+# git clone https://github.com/JuliaGPU/buildkite /etc/buildkite
 # ...
 # chown root:root agents/token.env image/secrets.private.key
 # chmod 600       agents/token.env image/secrets.private.key
