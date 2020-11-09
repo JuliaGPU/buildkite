@@ -19,7 +19,7 @@ services:
       - start
       - --disconnect-after-job
       - --hooks-path=/hooks
-      - --tags=queue=juliagpu,cuda=10.0,cuda=10.1,cuda=10.2,cuda=11.0,cuda=9.0,cuda=9.2,cap=sm_75,latest
+      - --tags=queue=juliagpu,cuda=10.0,cuda=10.1,cuda=10.2,cuda=11.0,cuda=9.0,cuda=9.2,cap=sm_75,cap=recent
       - --name=rtx2080.hydor.elis.ugent.be
     volumes:
       - /storage/buildkite/rtx2080:/root

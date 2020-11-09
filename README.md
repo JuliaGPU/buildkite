@@ -107,6 +107,30 @@ env:
 ```
 
 
+
+## Available agents
+
+All JuliaGPU agents are put under the `juliagpu` queue, so you should always include the
+`queue: "juliagpu"` line in the `agents` block of your steps. Then, you should select which
+kind of GPU runner you are interested in.
+
+### `cuda`
+
+These agents have one or more CUDA GPUs available, and can be used with CUDA.jl. The value
+of the `cuda` label indicates which CUDA version is supported by the driver on this agent,
+in case you need a specific CUDA version. If not, specify `cuda: "*"` to select any
+CUDA-capable agent.
+
+Similarly, these agents have a `cap` label to select on device capability, e.g. `sm_75`. A
+shorthand `cap: "recent"` can be used to select a range of GPUs with a recent-enough compute
+capability.
+
+### `intel`
+
+These agents have an oneAPI-capable GPU for use with oneAPI.jl. The value of the `intel` tag
+indicates the hardware generation, e.g. `gen9`.
+
+
 ## Adding an agent
 
 First, create a Docker Compose YAML template suitable for this agent. The
