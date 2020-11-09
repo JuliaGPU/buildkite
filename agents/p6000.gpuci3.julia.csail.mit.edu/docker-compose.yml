@@ -1,0 +1,26 @@
+version: "3.8"
+
+# gpuci3 has an i7-9700K, 8 threads in total,
+# with 16GB of RAM, and 24GB of VRAM
+
+services:
+  titan:
+    build:
+      context: ../../image/
+      args:
+        base: nvidia/cuda:11.1-cudnn8-devel-ubuntu18.04
+    runtime: nvidia
+    environment:
+      NVIDIA_DRIVER_CAPABILITIES: "compute,utility"
+      NVIDIA_VISIBLE_DEVICES: "GPU-b3926b7c-747b-a370-559e-27efc4c7c437"
+      JULIA_CUDA_MEMORY_LIMIT: 2147483648
+      JULIA_NUM_THREADS: 4
+    env_file: ../token.env
+    command:
+      - start
+      - --disconnect-after-job
+      - --hooks-path=/hooks
+      - --tags=queue=juliagpu,cuda=9.0,cuda=9.2,cuda=10.0,cuda=10.1,cuda=10.2,cuda=11.0,cuda=11.1,cap=sm_61
+      - --name=p6000.gpuci3.julia.csail.mit.edu
+    volumes:
+      - /home/buildkite/p6000:/root

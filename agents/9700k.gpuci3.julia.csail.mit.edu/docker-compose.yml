@@ -1,0 +1,23 @@
+version: "3.8"
+
+# gpuci3 has an i7-9700K, 8 threads in total, with an integrated UHD Graphics 630
+
+services:
+  titan:
+    build:
+      context: ../../image/
+      args:
+        base: intelopencl/intel-opencl:ubuntu-20.04-ppa
+    devices:
+      - "/dev/dri:/dev/dri"
+    environment:
+      JULIA_NUM_THREADS: 4
+    env_file: ../token.env
+    command:
+      - start
+      - --disconnect-after-job
+      - --hooks-path=/hooks
+      - --tags=queue=juliagpu,intel=gen9
+      - --name=9700k.gpuci3.julia.csail.mit.edu
+    volumes:
+      - /home/buildkite/9700k:/root
