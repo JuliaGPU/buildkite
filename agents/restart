@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+set -ueo pipefail
+
+agents=()
+case $HOSTNAME in
+  (hydor)   agents+=('rtx2080.hydor.elis.ugent.be' 'gtx1080.hydor.elis.ugent.be') ;;
+  (ripper)  agents+=('titan.ripper.elis.ugent.be') ;;
+  (cyclops) agents+=('1.cyclops.juliacomputing.io' '2.cyclops.juliacomputing.io' '3.cyclops.juliacomputing.io') ;;
+  (gpuci3)  agents+=('p6000.gpuci3.julia.csail.mit.edu' '9700k.gpuci3.julia.csail.mit.edu') ;;
+  (*)       echo "Unknown host '$HOSTNAME'!";;
+esac
+
+for agent in "${agents[@]}"; do
+  systemctl restart buildkite-agent@$agent
+done
