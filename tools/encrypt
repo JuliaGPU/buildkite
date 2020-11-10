@@ -14,13 +14,13 @@ openssl rand -base64 128 > $keyfile
 
 # encrypt the key
 encrypted_key=$(openssl rsautl -encrypt -pubin -inkey $DIR/../image/secrets.public.key -in $keyfile |
-                openssl base64 |
+                openssl base64 -A |
                 tr -d '\n')
 
 # encrypt the value
 encrypted=$(echo $val |
             openssl enc -aes-256-cbc -salt -pbkdf2 -iter 100000 -pass file:$keyfile |
-            openssl base64 |
+            openssl base64 -A |
             tr -d '\n')
 
 cat <<EOD

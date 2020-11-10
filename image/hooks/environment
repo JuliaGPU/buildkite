@@ -12,12 +12,12 @@ for value_var in $(set | awk -F "=" '{print $1}' | grep "SECRET_"); do
     encrypted_key=$(echo "$secret" | cut -d ';' -f 1)
     keyfile=$(mktemp)
     key=$(echo $encrypted_key |
-          openssl base64 -d |
+          openssl base64 -d -A |
           openssl rsautl -decrypt -inkey secrets.private.key -out $keyfile)
 
     encrypted_value=$(echo "$secret" | cut -d ';' -f 2)
     value=$(echo $encrypted_value |
-            openssl base64 -d |
+            openssl base64 -d -A |
             openssl enc -d -aes-256-cbc -pbkdf2 -iter 100000 -pass file:$keyfile)
 
     export $(echo "$(echo $name)=$value")
