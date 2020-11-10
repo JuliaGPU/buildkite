@@ -12,7 +12,7 @@ services:
     runtime: nvidia
     environment:
       NVIDIA_DRIVER_CAPABILITIES: "compute,utility"
-      NVIDIA_VISIBLE_DEVICES: "GPU-b8d5e790-ea4d-f962-e0c3-0448f69f2e23"
+      NVIDIA_VISIBLE_DEVICES: "GPU-30df6aac-ae48-1ba2-efb0-0b13dc41912b"
       JULIA_NUM_THREADS: 3
     env_file: ../token.env
     command:
