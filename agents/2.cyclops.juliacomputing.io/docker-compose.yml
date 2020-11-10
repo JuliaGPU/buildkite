@@ -1,0 +1,27 @@
+version: "3.8"
+
+# cyclops has 2 6-core Intel Xeon E5-2603 v4, 12 threads in total,
+# with 378GB of RAM and 16-32GB of VRAM per V100
+#
+# since this system is so underpowered CPU-wise, we make it a multigpu runner
+
+services:
+  buildkite:
+    build:
+      context: ../../image/
+      args:
+        base: nvidia/cuda:11.1-cudnn8-devel-ubuntu18.04
+    runtime: nvidia
+    environment:
+      NVIDIA_DRIVER_CAPABILITIES: "compute,utility"
+      NVIDIA_VISIBLE_DEVICES: "GPU-d90c7542-a6bf-616d-6475-29b63dcb6381,GPU-f735dd37-372b-a4c1-f643-cca0b729e13a,GPU-55e75c28-6346-c966-0e96-34cc09111eca,GPU-bf79bede-8a5a-69d2-05b7-cbb616bf1c50,GPU-927aa1fa-4934-95c1-5891-e123b03b9c65"
+      JULIA_NUM_THREADS: 3
+    env_file: ../token.env
+    command:
+      - start
+      - --disconnect-after-job
+      - --hooks-path=/hooks
+      - --tags=queue=juliagpu,cuda=9.0,cuda=9.2,cuda=10.0,cuda=10.1,cuda=10.2,cuda=11.0,cuda=11.1,cap=sm_75,cap=recent,multigpu
+      - --name=2.cyclops.juliacomputing.io
+    volumes:
+      - /home/buildkite/2:/root
