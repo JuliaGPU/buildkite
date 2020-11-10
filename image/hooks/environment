@@ -4,14 +4,24 @@ set -euo pipefail
 
 echo "--- :key: Decrypting secrets"
 
-for secret_var in $(set | awk -F "=" '{print $1}' | grep "SECRET_"); do
-    var=${secret_var:7}
-    echo "Found secret for variable $var"
+for value_var in $(set | awk -F "=" '{print $1}' | grep "SECRET_"); do
+    name=${value_var:7}
+    echo "Found secret for $name"
+    secret=${!value_var}
 
-    secret_val=${!secret_var}
-    val=$(echo $secret_val | openssl base64 -d | openssl rsautl -decrypt -inkey secrets.private.key)
+    encrypted_key=$(echo "$secret" | cut -d ';' -f 1)
+    keyfile=$(mktemp)
+    key=$(echo $encrypted_key |
+          openssl base64 -d |
+          openssl rsautl -decrypt -inkey secrets.private.key -out $keyfile)
 
-    export $(echo "$(echo $var)=$val")
+    encrypted_value=$(echo "$secret" | cut -d ';' -f 2)
+    value=$(echo $encrypted_value |
+            openssl base64 -d |
+            openssl enc -d -aes-256-cbc -pbkdf2 -iter 100000 -pass file:$keyfile)
+
+    export $(echo "$(echo $name)=$value")
+    shred -u $keyfile
 done
 
 rm /secrets.private.key
