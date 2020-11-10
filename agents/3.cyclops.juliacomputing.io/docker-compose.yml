@@ -23,5 +23,6 @@ services:
       - --hooks-path=/hooks
       - --tags=queue=juliagpu,cuda=9.0,cuda=9.2,cuda=10.0,cuda=10.1,cuda=10.2,cuda=11.0,cuda=11.1,cap=sm_75,cap=recent,multigpu
       - --name=3.cyclops.juliacomputing.io
+      - --priority=1
     volumes:
       - /home/buildkite/3:/root

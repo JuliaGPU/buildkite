@@ -22,5 +22,6 @@ services:
       - --hooks-path=/hooks
       - --tags=queue=juliagpu,cuda=9.0,cuda=9.2,cuda=10.0,cuda=10.1,cuda=10.2,cuda=11.0,cuda=11.1,cap=sm_61
       - --name=p6000.gpuci3.julia.csail.mit.edu
+      - --priority=3
     volumes:
       - /home/buildkite/p6000:/root

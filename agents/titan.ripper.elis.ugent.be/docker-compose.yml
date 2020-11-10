@@ -21,5 +21,6 @@ services:
       - --hooks-path=/hooks
       - --tags=queue=juliagpu,cuda=10.0,cuda=10.1,cuda=10.2,cuda=11.0,cuda=9.0,cuda=9.2,cap=sm_35
       - --name=titan.ripper.elis.ugent.be
+      - --priority=3
     volumes:
       - /storage/buildkite/titan:/root
