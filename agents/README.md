@@ -15,8 +15,9 @@ Similarly, these agents have a `cap` label to select on device capability, e.g. 
 shorthand `cap: "recent"` can be used to select a range of GPUs with a recent-enough compute
 capability.
 
-If you need multiple GPUs for your tests, you can request the `multigpu` label. Few agents
-have this label, so don't do so needlessly.
+Finally, if you need multiple GPUs for your tests you can request the `multigpu` label, and
+for tests that need an X server there is the `xorg` label. Few agents have these label, so
+don't do so needlessly.
 
 ## `intel`
 
