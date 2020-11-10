@@ -7,6 +7,7 @@ case $HOSTNAME in
   (ripper)  agents+=('titan.ripper.elis.ugent.be') ;;
   (cyclops) agents+=('1.cyclops.juliacomputing.io' '2.cyclops.juliacomputing.io' '3.cyclops.juliacomputing.io') ;;
   (gpuci3)  agents+=('p6000.gpuci3.julia.csail.mit.edu' '9700k.gpuci3.julia.csail.mit.edu') ;;
+  (gpuci1)  agents+=('rtx2070.gpuci1.julia.csail.mit.edu') ;;
   (*)       echo "Unknown host '$HOSTNAME'!";;
 esac
 

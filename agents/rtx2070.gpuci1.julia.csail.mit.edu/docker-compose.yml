@@ -1,0 +1,26 @@
+version: "3.8"
+
+# gpuci1 has an i7-9700K, 8 threads in total,
+# with 16GB of RAM, and 8GB of VRAM
+
+services:
+  buildkite:
+    build:
+      context: ../../image/
+      args:
+        base: nvidia/cuda:11.1-cudnn8-devel-ubuntu18.04
+    runtime: nvidia
+    environment:
+      NVIDIA_DRIVER_CAPABILITIES: "compute,utility"
+      NVIDIA_VISIBLE_DEVICES: "GPU-b8d5e790-ea4d-f962-e0c3-0448f69f2e23"
+      JULIA_NUM_THREADS: 3
+    env_file: ../token.env
+    command:
+      - start
+      - --disconnect-after-job
+      - --hooks-path=/hooks
+      - --tags=queue=juliagpu,queue=benchmark,cuda=9.0,cuda=9.2,cuda=10.0,cuda=10.1,cuda=10.2,cuda=11.0,cuda=11.1,cap=sm_75,cap=recent,intel=gen9
+      - --name=rtx2070.gpuci1.julia.csail.mit.edu
+      - --priority=3
+    volumes:
+      - /home/buildkite/rtx2070:/root
