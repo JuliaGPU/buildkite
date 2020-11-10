@@ -15,7 +15,9 @@ whereas Buildkite is typically used within the (trusted) boundaries of a single
 organization.
 
 This README documents how to use the JuliaGPU Buildkite CI. For details on the available
-agents, or how to add one, see the [agents README](agents/README.md).
+agents, or how to add one, see the [agents README](agents/README.md). **Note that this
+Buildkite set-up is fairly new, and the set-up may still change. Keep an eye on this README
+if anything breaks.**
 
 
 ## Adding a repository
@@ -24,9 +26,6 @@ If your Julia package can use a GPU, you may use the JuliaGPU CI infrastructure 
 on a system with a GPU. This is **not a general-purpose CI service**, and only intended to
 run GPU-related tests of Julia packages. For all other testing, use public infrastructure
 (Travis, Github Actions, etc).
-
-**NOTE: Buildkite for JuliaGPU CI is a recent development, and the set-up may still change.
-Keep an eye on this README if anything would break.**
 
 To enable the JuliaGPU CI for your repository, follow the steps below. Some of these steps
 are to be performed by an admin with access to the JuliaLang Buildkite instance, so you
@@ -68,10 +67,10 @@ administrative priviliges on the repository you want to add CI to.
    steps:
      - label: "Julia 1.5"
        plugins:
-         - JuliaCI/julia#v0.1:
+         - JuliaCI/julia#v0.2:
              version: 1.5
-         - JuliaCI/julia-test#v0.1: ~
-         - JuliaCI/julia-coverage#v0.1:
+         - JuliaCI/julia-test#v0.2: ~
+         - JuliaCI/julia-coverage#v0.2:
              codecov: true
        agents:
          queue: "juliagpu"
