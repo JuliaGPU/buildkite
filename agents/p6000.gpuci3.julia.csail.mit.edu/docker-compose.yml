@@ -15,6 +15,7 @@ services:
       NVIDIA_VISIBLE_DEVICES: "GPU-b3926b7c-747b-a370-559e-27efc4c7c437"
       JULIA_CUDA_MEMORY_LIMIT: 2147483648
       JULIA_NUM_THREADS: 4
+    pid: "host" #  NVIDIA/gpu-monitoring-tools#63
     env_file: ../token.env
     command:
       - start

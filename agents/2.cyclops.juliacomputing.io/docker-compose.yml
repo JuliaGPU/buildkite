@@ -16,6 +16,7 @@ services:
       NVIDIA_DRIVER_CAPABILITIES: "compute,utility"
       NVIDIA_VISIBLE_DEVICES: "GPU-d90c7542-a6bf-616d-6475-29b63dcb6381,GPU-f735dd37-372b-a4c1-f643-cca0b729e13a,GPU-55e75c28-6346-c966-0e96-34cc09111eca,GPU-bf79bede-8a5a-69d2-05b7-cbb616bf1c50,GPU-927aa1fa-4934-95c1-5891-e123b03b9c65"
       JULIA_NUM_THREADS: 3
+    pid: "host" #  NVIDIA/gpu-monitoring-tools#63
     env_file: ../token.env
     command:
       - start
