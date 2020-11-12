@@ -5,6 +5,7 @@ version: "3.8"
 
 services:
   buildkite:
+    hostname: hydor.elis.ugent.be
     build:
       context: ../../image/
       args:

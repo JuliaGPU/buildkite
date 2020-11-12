@@ -5,6 +5,7 @@ version: "3.8"
 
 services:
   buildkite:
+    hostname: gpuci1.julia.csail.mit.edu
     build:
       context: ../../image/
       args:
