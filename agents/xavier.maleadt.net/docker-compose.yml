@@ -1,0 +1,25 @@
+version: "3.8"
+
+# xavier is an NVIDIA Jetson AGX, 4 threads total, 16GB of shared RAM/VRAM
+
+services:
+  buildkite:
+    hostname: xavier.maleadt.net
+    build:
+      context: ../../image/
+      args:
+        base: nvidia/cuda:11.0-cudnn8-devel-ubuntu18.04
+    runtime: nvidia
+    environment:
+      NVIDIA_DRIVER_CAPABILITIES: "compute,utility"
+      JULIA_NUM_THREADS: 3
+    pid: "host" #  NVIDIA/gpu-monitoring-tools#63
+    env_file: ../token.env
+    command:
+      - start
+      - --disconnect-after-job
+      - --hooks-path=/hooks
+      - --tags=queue=juliagpu_arm,cuda=9.0,cuda=9.2,cuda=10.0,cuda=10.1,cuda=10.2,cap=sm_72
+      - --name=xavier.maleadt.net
+    volumes:
+      - /srv/buildkite:/root
