@@ -27,10 +27,18 @@ on a system with a GPU. This is **not a general-purpose CI service**, and only i
 run GPU-related tests of Julia packages. For all other testing, use public infrastructure
 (Travis, Github Actions, etc).
 
-To enable the JuliaGPU CI for your repository, follow the steps below. Some of these steps
-are to be performed by an admin with access to the JuliaLang Buildkite instance, so you
-should ask on the Julia Discourse or Slack about that. Other steps generally need
-administrative priviliges on the repository you want to add CI to.
+Some of the steps below require administrative privileges on the JuliaLang Buildkite
+instance, so you should coordinate on e.g. the JuliaGPU Slack channel or Discourse category.
+
+0. Install [the Buildkite
+   app](https://github.com/settings/connections/applications/Iv1.112bf4be3e5ecdeb). You
+   should check on the link whether the app is already installed for the GitHub organization
+   that hosts your repository. If it isn't, a Buildkite administrator needs to [request
+   installation of the
+   app](https://buildkite.com/organizations/julialang/repository-providers/new), for which
+   he needs to be part of the GitHub organization. The request then needs to be accepted by
+   an owner of the GitHub organization (organization settings > installed GitHub Apps >
+   Pending GitHub Apps installation requests).
 
 1. (by a Buildkite admin) [Create a new
    pipeline](https://buildkite.com/organizations/julialang/pipelines/new), using the
@@ -39,9 +47,7 @@ administrative priviliges on the repository you want to add CI to.
    a. Under `Git Repository`, select `Any account` and specify the package's HTTPS clone
       URL, e.g. `https://github.com/JuliaGPU/CUDA.jl.git`. Do not use the `git://` URL!
 
-   b. Remove the default step, instead adding the `Read steps from repository` action. Make
-      sure to target the JuliaGPU queue under `Agent Targeting Rules` by specifying
-      `queue=juliagpu`.
+   b. Remove the default step.
 
    c. Grant permission to the JuliaGPU team.
 
@@ -54,11 +60,22 @@ administrative priviliges on the repository you want to add CI to.
    b. Under GitHub settings, check the box to `Build pull requests from third-party forked
       repositories`.
 
-4. [Install the Buildkite
-   app](https://github.com/settings/connections/applications/Iv1.112bf4be3e5ecdeb) so that
-   CI statusses can be pushed to GitHub.
+3. (by a Buildkite admin) Edit the pipeline steps.
 
-5. In your repository, create `.buildkite/pipeline.yml`. Use this as a starting point:
+   a. Convert to YAML.
+
+   b. Paste the following step to upload a pipeline from the repository:
+
+   ```yaml
+   steps:
+     - label: ":buildkite: Pipeline upload"
+       command: buildkite-agent pipeline upload
+       branches: "!gh-pages"
+       agents:
+         queue: "juliagpu"
+   ```
+
+4. In your repository, create `.buildkite/pipeline.yml`. Use this as a starting point:
 
    ```yaml
    env:
