@@ -58,7 +58,7 @@ instance, so you should coordinate on e.g. the JuliaGPU Slack channel or Discour
    a. Under general settings, make the pipeline public by clicking the big green button.
 
    b. Under GitHub settings, check the box to `Build pull requests from third-party forked
-      repositories`.
+      repositories` and to `Build tags`.
 
 3. (by a Buildkite admin) Edit the pipeline steps.
 
