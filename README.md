@@ -92,6 +92,8 @@ instance, so you should coordinate on e.g. the JuliaGPU Slack channel or Discour
        agents:
          queue: "juliagpu"
          cuda: "*"
+       if: build.message !~ /\[skip tests\]/
+       timeout_in_minutes: 60
    ```
 
     If you want to perform several tests, or introduce test phases, you may want to add
