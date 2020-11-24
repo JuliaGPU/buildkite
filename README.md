@@ -84,10 +84,10 @@ instance, so you should coordinate on e.g. the JuliaGPU Slack channel or Discour
    steps:
      - label: "Julia 1.5"
        plugins:
-         - JuliaCI/julia#v0.2:
+         - JuliaCI/julia#v0.5:
              version: 1.5
-         - JuliaCI/julia-test#v0.2: ~
-         - JuliaCI/julia-coverage#v0.2:
+         - JuliaCI/julia-test#v0.3: ~
+         - JuliaCI/julia-coverage#v0.3:
              codecov: true
        agents:
          queue: "juliagpu"
