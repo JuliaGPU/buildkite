@@ -27,44 +27,31 @@ on a system with a GPU. This is **not a general-purpose CI service**, and only i
 run GPU-related tests of Julia packages. For all other testing, use public infrastructure
 (Travis, Github Actions, etc).
 
-Some of the steps below require administrative privileges on the JuliaLang Buildkite
-instance, so you should coordinate on e.g. the JuliaGPU Slack channel or Discourse category.
+Before everything else, the [the Buildkite
+app](https://github.com/settings/connections/applications/Iv1.112bf4be3e5ecdeb) needs to be
+available for the GitHub organization that hosts your repository. If the organization is not
+listed, a user with administrative privileges on both the JuliaLang BuildKite and the GitHub
+organization in question should [set that
+up](https://buildkite.com/organizations/julialang/repository-providers/new) and make sure
+the organization is then listed as a [repository
+provider](https://buildkite.com/organizations/julialang/repository-providers). You should
+coordinate this on the #gpu channel of the JuliaLang slack, and ping BuildKite admins
+(@maleadt, @vchuravy, @DilumAluthge, ...).
 
-0. Install [the Buildkite
-   app](https://github.com/settings/connections/applications/Iv1.112bf4be3e5ecdeb). You
-   should check on the link whether the app is already installed for the GitHub organization
-   that hosts your repository. If it isn't, a Buildkite administrator needs to [request
-   installation of the
-   app](https://buildkite.com/organizations/julialang/repository-providers/new), for which
-   he needs to be part of the GitHub organization. The request then needs to be accepted by
-   an owner of the GitHub organization (organization settings > installed GitHub Apps >
-   Pending GitHub Apps installation requests).
+Next, a BuildKite admin should set-up a pipeline for your repository:
 
-1. (by a Buildkite admin) [Create a new
-   pipeline](https://buildkite.com/organizations/julialang/pipelines/new), using the
-   package's name.
+1. [Create a new pipeline](https://buildkite.com/organizations/julialang/pipelines/new),
+   using the package's name.
 
-   a. Under `Git Repository`, select `Any account` and specify the package's HTTPS clone
-      URL, e.g. `https://github.com/JuliaGPU/CUDA.jl.git`. Do not use the `git://` URL!
+   a. Under `Git Repository`, select the GitHub organization (if it isn't listed, the
+   BuildKite app isn't properly set up) and the repository from the drop-down. Make sure
+   check-out uses HTTPS.
 
-   b. Remove the default step.
+   b. Check `Auto-create webhooks`.
 
    c. Grant permission to the JuliaGPU team.
 
-2. Apply the proposed GitHub webhook settings to your repository.
-
-3. (by a Buildkite admin) Navigate to the Pipeline Settings.
-
-   a. Under general settings, make the pipeline public by clicking the big green button.
-
-   b. Under GitHub settings, check the box to `Build pull requests from third-party forked
-      repositories` and to `Build tags`.
-
-3. (by a Buildkite admin) Edit the pipeline steps.
-
-   a. Convert to YAML.
-
-   b. Paste the following step to upload a pipeline from the repository:
+2. Use the following steps, and click `Save and Close`:
 
    ```yaml
    steps:
@@ -75,11 +62,9 @@ instance, so you should coordinate on e.g. the JuliaGPU Slack channel or Discour
          queue: "juliagpu"
    ```
 
-4. In your repository, create `.buildkite/pipeline.yml`. Use this as a starting point:
+3. Navigate to the Pipeline Settings.
 
-   ```yaml
-   env:
-     SECRET_CODECOV_TOKEN: "..."
+   a. Under general settings, make the pipeline public by clicking the big green button.
 
    steps:
      - label: "Julia 1.5"
@@ -96,15 +81,37 @@ instance, so you should coordinate on e.g. the JuliaGPU Slack channel or Discour
        timeout_in_minutes: 60
    ```
 
-    If you want to perform several tests, or introduce test phases, you may want to add
-    additional steps. Note that each step is run in a fresh container (as opposed to how
-    Buildkite normally works), so you need to repeat the set-up that provides Julia (here
-    done by the `julia` plugin) and/or instantiates your project (done by the `julia-test`
-    plugin). If you need to send resources across steps, use
-    [artifacts](https://buildkite.com/docs/pipelines/artifacts).
+Finally, you should create `.buildkite/pipeline.yml` in your repository with the steps to
+perform GPU CI. Start from the following template:
 
-    For coverage submission to Codecov to work, you need to encrypt your `CODECOV_TOKEN` and
-    specify it as a global `SECRET_CODECOV_TOKEN` (see below).
+```yaml
+env:
+  SECRET_CODECOV_TOKEN: "..."
+
+steps:
+  - label: "Julia 1.5"
+    plugins:
+      - JuliaCI/julia#v0.5:
+          version: 1.5
+      - JuliaCI/julia-test#v0.3: ~
+      - JuliaCI/julia-coverage#v0.3:
+          codecov: true
+    agents:
+      queue: "juliagpu"
+      cuda: "*"
+    if: build.message !~ /\[skip tests\]/
+    timeout_in_minutes: 60
+```
+
+If you want to perform several tests, or introduce test phases, you may want to add
+additional steps. Note that each step is run in a fresh container (as opposed to how
+Buildkite normally works), so you need to repeat the set-up that provides Julia (here done
+by the `julia` plugin) and/or instantiates your project (done by the `julia-test` plugin).
+If you need to send resources across steps, use
+[artifacts](https://buildkite.com/docs/pipelines/artifacts).
+
+For coverage submission to Codecov to work, you need to encrypt your `CODECOV_TOKEN` and
+specify it as a global `SECRET_CODECOV_TOKEN` (see below).
 
 
 
