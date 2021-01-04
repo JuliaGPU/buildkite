@@ -66,20 +66,8 @@ Next, a BuildKite admin should set-up a pipeline for your repository:
 
    a. Under general settings, make the pipeline public by clicking the big green button.
 
-   steps:
-     - label: "Julia 1.5"
-       plugins:
-         - JuliaCI/julia#v0.5:
-             version: 1.5
-         - JuliaCI/julia-test#v0.3: ~
-         - JuliaCI/julia-coverage#v0.3:
-             codecov: true
-       agents:
-         queue: "juliagpu"
-         cuda: "*"
-       if: build.message !~ /\[skip tests\]/
-       timeout_in_minutes: 60
-   ```
+   b. Under GitHub settings, check the box to `Build pull requests from
+   third-party forked repositories` and to `Build tags`.
 
 Finally, you should create `.buildkite/pipeline.yml` in your repository with the steps to
 perform GPU CI. Start from the following template:
