@@ -121,3 +121,9 @@ Use the following snippet in your pipeline.yml:
 env:
   SECRET_CODECOV_TOKEN: "kaIXEN51HinaQ4JGclQcIgxeMMtXDb5uvnP3E2eKrH4Eruf2pKd5QwUGcIVL8+rcWeo5FWj883rNxRQEH3YeCWs6/i7vzs+ORvG51QeCNYQgNqFzPsWRcq5qJYc+JPFbisS7q9nghqWTwr52cnjarD4Xx3ceGorMyS5NvFpCNxMgqHNyGkLvipxcTTJfKZK61bpnbntoIjiIO1XSZKjcxnXFGFnolV9BHCr5v8f7F42n2tUH7X3nDHmTBr1AbO2lFAU9ra/KezHcIf0wg2HcV8LZD0+mj8q/SBPjQZSH7cxwx4Q2eTjT4Sw7xnrBGuySVm8ZPCAV7nRNEHo+VqR+GQ=="
 ```
+
+If your version of OpenSSL is too old, the `./tools/encrypt` script may fail.
+In that case, you can run it inside Docker:
+```bash
+docker run --rm -it -v $(pwd):/root ubuntu bash -c 'apt update && apt install -y openssl && /root/tools/encrypt'
+```
