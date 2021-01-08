@@ -87,7 +87,8 @@ steps:
     agents:
       queue: "juliagpu"
       cuda: "*"
-    if: build.message !~ /\[skip tests\]/
+    # don't run Buildkite if the commit message includes the text [skip ci]
+    if: build.message !~ /\[skip ci\]/ 
     timeout_in_minutes: 60
 ```
 
