@@ -1,0 +1,33 @@
+version: "3.8"
+
+# helios has a 12-core (24-thread) Ryzen Threadripper 1920X,
+# with 32GB of RAM
+# two GPUs are available:
+# - Radeon RX 480 (8GB)
+# - Radeon Vega 56 (8GB)
+
+services:
+  buildkite:
+    hostname: helios.jpsamaroo.me
+    build:
+      context: ../../image/
+      args:
+        base: rocm/dev-ubuntu-20.04
+    environment:
+      JULIA_NUM_THREADS: 4
+    devices:
+      - "/dev/dri:/dev/dri"
+      - "/dev/kfd:/dev/kfd"
+    security_opt:
+      - seccomp:unconfined
+    privileged: true
+    env_file: ../../token.env
+    command:
+      - start
+      - --disconnect-after-job
+      - --hooks-path=/hooks
+      - --tags=queue=juliagpu,rocm
+      - --name=helios.jpsamaroo.me
+      - --priority=1
+    volumes:
+      - /home/buildkite/1:/root
