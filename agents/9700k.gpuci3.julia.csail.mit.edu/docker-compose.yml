@@ -18,7 +18,7 @@ services:
       - start
       - --disconnect-after-job
       - --hooks-path=/hooks
-      - --tags=queue=juliagpu,intel=gen9,fastcpu=true
+      - --tags=queue=juliagpu,queue=benchmark,intel=gen9,fastcpu=true
       - --name=9700k.gpuci3.julia.csail.mit.edu
     volumes:
       - /home/buildkite/9700k:/root
