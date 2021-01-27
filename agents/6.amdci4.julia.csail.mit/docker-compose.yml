@@ -1,0 +1,22 @@
+version: "3.8"
+
+# amdci4 2 32 core AMD EPYC 7502s, 128 threads in total, 512 GB RAM
+
+services:
+  buildkite:
+    hostname: amdci4.julia.csail.mit.edu
+    build:
+      context: ../../image/
+      args:
+        base: ubuntu:20.04
+    environment:
+      JULIA_NUM_THREADS: 32
+    env_file: ../token.env
+    command:
+      - start
+      - --disconnect-after-job
+      - --hooks-path=/hooks
+      - --tags=queue=juliacpu,fastcpu=true
+      - --name=6.amdci4.julia.csail.mit.edu
+    volumes:
+      - /home/buildkite/6:/root
