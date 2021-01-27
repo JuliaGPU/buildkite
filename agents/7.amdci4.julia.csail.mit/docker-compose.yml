@@ -10,7 +10,7 @@ services:
       args:
         base: ubuntu:20.04
     environment:
-      JULIA_NUM_THREADS: 32
+      JULIA_NUM_THREADS: 16
     env_file: ../token.env
     command:
       - start
