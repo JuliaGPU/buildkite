@@ -77,12 +77,12 @@ env:
   SECRET_CODECOV_TOKEN: "..."
 
 steps:
-  - label: "Julia 1.5"
+  - label: "Julia v1"
     plugins:
-      - JuliaCI/julia#v0.5:
-          version: 1.5
-      - JuliaCI/julia-test#v0.3: ~
-      - JuliaCI/julia-coverage#v0.3:
+      - JuliaCI/julia#v1:
+          version: "1"
+      - JuliaCI/julia-test#v1: ~
+      - JuliaCI/julia-coverage#v1:
           codecov: true
     agents:
       queue: "juliagpu"
