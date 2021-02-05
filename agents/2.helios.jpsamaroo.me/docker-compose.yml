@@ -3,8 +3,9 @@ version: "3.8"
 # helios has a 12-core (24-thread) Ryzen Threadripper 1920X,
 # with 32GB of RAM
 # two GPUs are available:
-# - Radeon RX 480 (8GB)
-# - Radeon Vega 56 (8GB)
+# - Radeon Vega 56 (8GB) (MSI)
+# - Radeon Vega 56 (8GB) (Sapphire)
+# only one GPU is available per agent
 
 services:
   buildkite:
@@ -12,11 +13,12 @@ services:
     build:
       context: ../../image/
       args:
-        base: rocm/dev-ubuntu-20.04
+        base: jps/rocm-ci
     environment:
       JULIA_NUM_THREADS: 4
     devices:
-      - "/dev/dri:/dev/dri"
+      - "/dev/dri/card1:/dev/dri/card1"
+      - "/dev/dri/renderD129:/dev/dri/renderD129"
       - "/dev/kfd:/dev/kfd"
     security_opt:
       - seccomp:unconfined
@@ -27,7 +29,7 @@ services:
       - --disconnect-after-job
       - --hooks-path=/hooks
       - --tags=queue=juliagpu,rocm
-      - --name=helios.jpsamaroo.me
+      - --name=2.helios.jpsamaroo.me
       - --priority=1
     volumes:
-      - /home/buildkite/1:/root
+      - /home/buildkite/2:/root
