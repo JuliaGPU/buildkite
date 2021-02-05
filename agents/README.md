@@ -24,6 +24,11 @@ don't do so needlessly.
 These agents have an oneAPI-capable GPU for use with oneAPI.jl. The value of the `intel` tag
 indicates the hardware generation, e.g. `gen9`.
 
+## `rocm`
+
+These agents have one AMD GPU for use with AMDGPU.jl. Most necessary ROCm external libraries
+are installed and available. Image is based on `rocm/dev-ubuntu-20.04`.
+
 
 # Adding an agent
 
