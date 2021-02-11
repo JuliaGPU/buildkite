@@ -4,6 +4,10 @@ After=docker.service
 Requires=docker.service
 PartOf=docker.service
 
+StartLimitIntervalSec=60
+StartLimitBurst=5
+
+
 [Service]
 Type=simple
 WorkingDirectory=/etc/buildkite/agents/%i
@@ -12,7 +16,10 @@ ExecStartPre=/usr/bin/flock /tmp/buildkite.lock /usr/bin/git fetch
 ExecStartPre=/usr/bin/flock /tmp/buildkite.lock /usr/bin/git reset --hard origin/main
 ExecStartPre=/usr/local/bin/docker-compose build --quiet
 ExecStart=/usr/local/bin/docker-compose up --force-recreate --exit-code-from buildkite
-Restart=on-success
+
+Restart=always
+RestartSec=1s
+
 
 [Install]
 WantedBy=multi-user.target
