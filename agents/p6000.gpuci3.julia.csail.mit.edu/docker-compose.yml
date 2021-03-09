@@ -9,12 +9,10 @@ services:
     build:
       context: ../../image/
       args:
-        base: nvidia/cuda:11.1.1-cudnn8-devel-ubuntu20.04
+        base: nvidia/cuda:11.2.1-cudnn8-devel-ubuntu20.04
     runtime: nvidia
     environment:
       NVIDIA_DRIVER_CAPABILITIES: "compute,utility"
-      NVIDIA_VISIBLE_DEVICES: "GPU-b3926b7c-747b-a370-559e-27efc4c7c437"
-      JULIA_CUDA_MEMORY_LIMIT: 2147483648
       JULIA_NUM_THREADS: 6
     pid: "host" #  NVIDIA/gpu-monitoring-tools#63
     env_file: ../token.env
