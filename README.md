@@ -68,6 +68,9 @@ Next, a BuildKite admin should set-up a pipeline for your repository:
 
    b. Under GitHub settings, check the box to `Build pull requests from
    third-party forked repositories` and to `Build tags`.
+   
+   c. Under GitHub settings, set the branch filter to `master`. This is to avoid races
+   between branch and PR build events, which can confuse documentation deployment.
 
 Finally, you should create `.buildkite/pipeline.yml` in your repository with the steps to
 perform GPU CI. Start from the following template:
