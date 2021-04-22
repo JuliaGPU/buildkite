@@ -23,7 +23,7 @@ services:
       - start
       - --disconnect-after-job
       - --hooks-path=/hooks
-      - --tags=queue=juliagpu,cuda=9.0,cuda=9.2,cuda=10.0,cuda=10.1,cuda=10.2,cuda=11.0,cuda=11.1,cuda=11.2,cap=sm_75,cap=recent,multigpu
+      - --tags=queue=juliagpu,cuda=9.0,cuda=9.2,cuda=10.0,cuda=10.1,cuda=10.2,cuda=11.0,cuda=11.1,cuda=11.2,cuda=11.3,cap=sm_75,cap=recent,multigpu
       - --name=2.cyclops.juliacomputing.io
       - --priority=1
     volumes:
