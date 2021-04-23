@@ -70,7 +70,7 @@ Next, a BuildKite admin should set-up a pipeline for your repository:
    
       - check the box to `Build pull requests from third-party forked repositories`
       - check the box to `Build tags`
-      - set the branch filter to `master` (and other branches you want to run CI for,
+      - set the branch filter to `master v*` (and other branches you want to run CI for,
       e.g., `release-*`)
 
 Finally, you should create `.buildkite/pipeline.yml` in your repository with the steps to
