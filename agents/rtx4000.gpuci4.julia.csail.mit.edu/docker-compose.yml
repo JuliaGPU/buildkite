@@ -13,7 +13,7 @@ services:
     runtime: nvidia
     environment:
       NVIDIA_DRIVER_CAPABILITIES: "compute,utility"
-      JULIA_NUM_THREADS: 3
+      JULIA_NUM_THREADS: 2
     pid: "host" #  NVIDIA/gpu-monitoring-tools#63
     env_file: ../token.env
     command:
