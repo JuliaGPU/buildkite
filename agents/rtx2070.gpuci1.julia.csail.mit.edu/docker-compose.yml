@@ -9,11 +9,11 @@ services:
     build:
       context: ../../image/
       args:
-        base: nvidia/cuda:11.3.0-cudnn8-devel-ubuntu20.04
+        base: nvidia/cuda:11.4.1-cudnn8-devel-ubuntu20.04
     runtime: nvidia
     environment:
       NVIDIA_DRIVER_CAPABILITIES: "compute,utility"
-      JULIA_NUM_THREADS: 3
+      JULIA_NUM_THREADS: 2
     pid: "host" #  NVIDIA/gpu-monitoring-tools#63
     devices:
       - "/dev/dri:/dev/dri"
@@ -22,7 +22,7 @@ services:
       - start
       - --disconnect-after-job
       - --hooks-path=/hooks
-      - --tags=queue=benchmark,cuda=9.0,cuda=9.2,cuda=10.0,cuda=10.1,cuda=10.2,cuda=11.0,cuda=11.1,cuda=11.2,cuda=11.3,cap=sm_75,cap=recent,intel=gen9
+      - --tags=queue=juliagpu,queue=benchmark,cuda=9.0,cuda=9.2,cuda=10.0,cuda=10.1,cuda=10.2,cuda=11.0,cuda=11.1,cuda=11.2,cuda=11.3,cuda=11.4,cap=sm_75,cap=recent,intel=gen9
       - --name=rtx2070.gpuci1.julia.csail.mit.edu
       - --priority=3
     volumes:
