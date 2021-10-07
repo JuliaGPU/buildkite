@@ -1,0 +1,27 @@
+version: "3.8"
+
+# gpuci has 2 AMD EPYC 7402 CPUs, 48 threads in total, with 504GB of RAM
+
+services:
+  buildkite:
+    hostname: 5.gpuci.julia.csail.mit.edu
+    build:
+      context: ../../image/
+      args:
+        base: nvidia/cuda:11.4.2-cudnn8-devel-ubuntu20.04
+    runtime: nvidia
+    environment:
+      NVIDIA_DRIVER_CAPABILITIES: "compute,utility"
+      NVIDIA_VISIBLE_DEVICES: "GPU-ec68e28e-d7c6-21eb-8223-88cb012eae5c"
+      JULIA_NUM_THREADS: 8
+    pid: "host" #  NVIDIA/gpu-monitoring-tools#63
+    env_file: ../token.env
+    command:
+      - start
+      - --disconnect-after-job
+      - --hooks-path=/hooks
+      - --tags=queue=juliagpu,cuda=9.0,cuda=9.2,cuda=10.0,cuda=10.1,cuda=10.2,cuda=11.0,cuda=11.1,cuda=11.2,cuda=11.3,cuda=11.4,cap=sm_75,cap=recent
+      - --name=5.gpuci.julia.csail.mit.edu
+      - --priority=4
+    volumes:
+      - /home/buildkite/rtx5000.3:/root
