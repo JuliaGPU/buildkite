@@ -4,7 +4,7 @@ version: "3.8"
 
 services:
   buildkite:
-    hostname: gpuci.5
+    hostname: gpuci.11
     build:
       context: ../../image/
       args:
@@ -12,7 +12,7 @@ services:
     runtime: nvidia
     environment:
       NVIDIA_DRIVER_CAPABILITIES: "compute,utility"
-      NVIDIA_VISIBLE_DEVICES: "MIG-ce656940-2751-514d-be2e-0e98e6b56bf7"
+      NVIDIA_VISIBLE_DEVICES: "MIG-b147d00d-faab-56ef-bc9c-219152732827"
       JULIA_NUM_THREADS: 2
     pid: "host" #  NVIDIA/gpu-monitoring-tools#63
     env_file: ../token.env
@@ -21,7 +21,7 @@ services:
       - --disconnect-after-job
       - --hooks-path=/hooks
       - --tags=queue=juliagpu,cuda=9.0,cuda=9.2,cuda=10.0,cuda=10.1,cuda=10.2,cuda=11.0,cuda=11.1,cuda=11.2,cuda=11.3,cuda=11.4,cap=sm_80,cap=recent
-      - --name=gpuci.5
+      - --name=gpuci.11
       - --priority=4
     volumes:
-      - /home/buildkite/gpuci.5:/root
+      - /home/buildkite/gpuci.11:/root

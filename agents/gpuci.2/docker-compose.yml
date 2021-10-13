@@ -4,7 +4,7 @@ version: "3.8"
 
 services:
   buildkite:
-    hostname: 2.gpuci.julia.csail.mit.edu
+    hostname: gpuci.2
     build:
       context: ../../image/
       args:
@@ -12,8 +12,8 @@ services:
     runtime: nvidia
     environment:
       NVIDIA_DRIVER_CAPABILITIES: "compute,utility"
-      NVIDIA_VISIBLE_DEVICES: "GPU-ac84ebf5-5dac-2eeb-3426-12786e07f9c3"
-      JULIA_NUM_THREADS: 8
+      NVIDIA_VISIBLE_DEVICES: "MIG-23d20f82-32e9-51f0-b5c7-f1d703b648ad"
+      JULIA_NUM_THREADS: 2
     pid: "host" #  NVIDIA/gpu-monitoring-tools#63
     env_file: ../token.env
     command:
@@ -21,7 +21,7 @@ services:
       - --disconnect-after-job
       - --hooks-path=/hooks
       - --tags=queue=juliagpu,cuda=9.0,cuda=9.2,cuda=10.0,cuda=10.1,cuda=10.2,cuda=11.0,cuda=11.1,cuda=11.2,cuda=11.3,cuda=11.4,cap=sm_80,cap=recent
-      - --name=2.gpuci.julia.csail.mit.edu
+      - --name=gpuci.2
       - --priority=4
     volumes:
-      - /home/buildkite/a100.2:/root
+      - /home/buildkite/gpuci.2:/root
