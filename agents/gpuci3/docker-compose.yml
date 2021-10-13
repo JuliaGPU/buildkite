@@ -4,7 +4,7 @@ version: "3.8"
 
 services:
   buildkite:
-    hostname: gpuci3.julia.csail.mit.edu
+    hostname: gpuci3
     build:
       context: ../../image/
       args:
@@ -18,7 +18,7 @@ services:
       - start
       - --disconnect-after-job
       - --hooks-path=/hooks
-      - --tags=queue=juliagpu,intel=gen9,fastcpu=true
-      - --name=9700k.gpuci3.julia.csail.mit.edu
+      - --tags=queue=juliagpu,intel=gen9
+      - --name=gpuci3
     volumes:
-      - /home/buildkite/9700k:/root
+      - /home/buildkite:/root
