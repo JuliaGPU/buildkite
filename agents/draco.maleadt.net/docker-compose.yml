@@ -1,24 +1,24 @@
 version: "3.8"
 
-# gpuci3 has an i7-9700K, 8 threads in total, with an integrated UHD Graphics 630
+# an Intel NUC 11 (NUC11PAHi7) containing a i7-1165G7 (8 threads) with 32GiB RAM
 
 services:
   buildkite:
-    hostname: gpuci3
+    hostname: draco.maleadt.net
     build:
       context: ../../image/
       args:
-        base: intelopencl/intel-opencl:ubuntu-20.04-ppa
+        base: intel/oneapi
     devices:
       - "/dev/dri:/dev/dri"
     environment:
-      JULIA_NUM_THREADS: 1
+      JULIA_NUM_THREADS: 8
     env_file: ../token.env
     command:
       - start
       - --disconnect-after-job
       - --hooks-path=/hooks
-      - --tags=queue=juliagpu,intel=gen9
-      - --name=gpuci3
+      - --tags=queue=juliagpu,intel=gen12
+      - --name=draco.maleadt.net
     volumes:
       - /home/buildkite:/root
