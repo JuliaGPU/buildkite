@@ -2,26 +2,30 @@
 set -euo pipefail
 
 
-echo "--- :key: Decrypting secrets"
+if [[ "${BUILDKITE_PULL_REQUEST}" == "false" ]]; then
+    echo "--- :key: Decrypting secrets"
 
-for value_var in $(set | awk -F "=" '{print $1}' | grep "SECRET_"); do
-    name=${value_var:7}
-    echo "Found secret for $name"
-    secret=${!value_var}
+    for value_var in $(set | awk -F "=" '{print $1}' | grep "SECRET_"); do
+        name=${value_var:7}
+        echo "Found secret for $name"
+        secret=${!value_var}
 
-    encrypted_key=$(echo "$secret" | cut -d ';' -f 1)
-    keyfile=$(mktemp)
-    key=$(echo $encrypted_key |
-          openssl base64 -d -A |
-          openssl rsautl -decrypt -inkey /secrets.private.key -out $keyfile)
-
-    encrypted_value=$(echo "$secret" | cut -d ';' -f 2)
-    value=$(echo $encrypted_value |
+        encrypted_key=$(echo "$secret" | cut -d ';' -f 1)
+        keyfile=$(mktemp)
+        key=$(echo $encrypted_key |
             openssl base64 -d -A |
-            openssl enc -d -aes-256-cbc -pbkdf2 -iter 100000 -pass file:$keyfile)
+            openssl rsautl -decrypt -inkey /secrets.private.key -out $keyfile)
 
-    export $(echo "$(echo $name)=$value")
-    shred -u $keyfile
-done
+        encrypted_value=$(echo "$secret" | cut -d ';' -f 2)
+        value=$(echo $encrypted_value |
+                openssl base64 -d -A |
+                openssl enc -d -aes-256-cbc -pbkdf2 -iter 100000 -pass file:$keyfile)
+
+        export $(echo "$(echo $name)=$value")
+        shred -u $keyfile
+    done
+else
+    echo "--- :key: Skipping decryption of secrets"
+fi
 
 rm /secrets.private.key
