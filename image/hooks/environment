@@ -12,17 +12,17 @@ if [[ "${BUILDKITE_PULL_REQUEST}" == "false" ]]; then
 
         encrypted_key=$(echo "$secret" | cut -d ';' -f 1)
         keyfile=$(mktemp)
-        key=$(echo $encrypted_key |
+        echo "$encrypted_key" |
             openssl base64 -d -A |
-            openssl rsautl -decrypt -inkey /secrets.private.key -out $keyfile)
+            openssl rsautl -decrypt -inkey /secrets.private.key -out "$keyfile"
 
         encrypted_value=$(echo "$secret" | cut -d ';' -f 2)
-        value=$(echo $encrypted_value |
+        value=$(echo "$encrypted_value" |
                 openssl base64 -d -A |
-                openssl enc -d -aes-256-cbc -pbkdf2 -iter 100000 -pass file:$keyfile)
+                openssl enc -d -aes-256-cbc -pbkdf2 -iter 100000 -pass "file:$keyfile")
 
-        export $(echo "$(echo $name)=$value")
-        shred -u $keyfile
+        export "$name"="$value"
+        shred -u "$keyfile"
     done
 else
     echo "--- :key: Skipping decryption of secrets"
