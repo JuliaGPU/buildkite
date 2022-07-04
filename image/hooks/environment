@@ -2,7 +2,9 @@
 set -euo pipefail
 
 
-if [[ "${BUILDKITE_PULL_REQUEST}" == "false" ]]; then
+# only decrypt secrets if this is a trusted environment (i.e., not a third-party PR)
+if [[ "${BUILDKITE_PULL_REQUEST}" == "false" ||
+      "${BUILDKITE_PULL_REQUEST_REPO}" == "${BUILDKITE_REPO}" ]]; then
     echo "--- :key: Decrypting secrets"
 
     for value_var in $(set | awk -F "=" '{print $1}' | grep "SECRET_"); do
