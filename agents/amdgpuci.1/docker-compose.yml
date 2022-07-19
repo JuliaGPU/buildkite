@@ -1,0 +1,34 @@
+version: "3.8"
+
+# amdgpuci has 2 "AMD EPYC 7742 64-Core Processor"
+# with 256GB of RAM
+# eight MI100 GPUs are available, with feature string:
+# "amdgcn-amd-amdhsa--gfx908:sramecc+:xnack-"
+# only one GPU is available per agent
+
+services:
+  buildkite:
+    hostname: amdgpuci.amd.com
+    build:
+      context: ../../image/
+      args:
+        base: jps/rocm-ci
+    environment:
+      JULIA_NUM_THREADS: 32
+      ROCR_VISIBLE_DEVICES: 1
+    devices:
+      - "/dev/dri:/dev/dri"
+      - "/dev/kfd:/dev/kfd"
+    security_opt:
+      - seccomp:unconfined
+    privileged: true
+    env_file: ../../token.env
+    command:
+      - start
+      - --disconnect-after-job
+      - --hooks-path=/hooks
+      - --tags=queue=juliagpu,rocm
+      - --name=amdgpuci.1
+      - --priority=1
+    volumes:
+      - /home/jsamaroo/buildkite-root/1:/root
