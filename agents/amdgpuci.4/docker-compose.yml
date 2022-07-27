@@ -27,7 +27,7 @@ services:
       - start
       - --disconnect-after-job
       - --hooks-path=/hooks
-      - --tags=queue=juliagpu,rocm
+      - --tags=queue=juliagpu,rocm,rocmgpu=gfx908
       - --name=amdgpuci.4
       - --priority=1
     volumes:
