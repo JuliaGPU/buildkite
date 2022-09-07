@@ -4,7 +4,7 @@ version: "3.8"
 
 services:
   buildkite:
-    hostname: draco.maleadt.net
+    hostname: sagittarius.maleadt.net
     build:
       context: ../../image/
       args:
@@ -12,13 +12,13 @@ services:
     devices:
       - "/dev/dri:/dev/dri"
     environment:
-      JULIA_NUM_THREADS: 8
+      JULIA_NUM_THREADS: 4
     env_file: ../token.env
     command:
       - start
       - --disconnect-after-job
       - --hooks-path=/hooks
       - --tags=queue=juliagpu,intel=gen12
-      - --name=draco.maleadt.net
+      - --name=sagittarius.maleadt.net
     volumes:
       - /home/buildkite:/root
