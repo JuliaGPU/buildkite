@@ -27,6 +27,8 @@ on a system with a GPU. This is **not a general-purpose CI service**, and only i
 run GPU-related tests of Julia packages. For all other testing, use public infrastructure
 (Travis, Github Actions, etc).
 
+### Steps for administrators
+
 Before everything else, the [the Buildkite
 app](https://github.com/settings/connections/applications/Iv1.112bf4be3e5ecdeb) needs to be
 available for the GitHub organization that hosts your repository. If the organization is not
@@ -72,6 +74,8 @@ Next, a BuildKite admin should set-up a pipeline for your repository:
       - check the box to `Build tags`
       - set the branch filter to `master v*` (and other branches you want to run CI for,
       e.g., `release-*`)
+
+### Steps for developers
 
 Finally, you should create `.buildkite/pipeline.yml` in your repository with the steps to
 perform GPU CI. Start from the following template:
