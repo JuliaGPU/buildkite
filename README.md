@@ -4,8 +4,8 @@ This repository contains resources related to the JuliaGPU Buildkite CI infrastr
 
 - a custom Ubuntu-based image that can be based off of another image (e.g.
   CUDA's images);
-- support for encrypted environment variables in the pipeline, and an
-  environment hook to decode them;
+- integration with [cryptic](https://github.com/staticfloat/cryptic-buildkite-plugin)
+  to support encrypted secrets in the pipeline;
 - Docker Compose templates and systemd service files to tie everything together,
   and give each job a safe and reproducible execution environment.
 
@@ -69,21 +69,34 @@ Next, a BuildKite admin should set-up a pipeline for your repository:
    a. Under general settings, make the pipeline public by clicking the big green button.
 
    b. Under GitHub settings
-   
+
       - check the box to `Build pull requests from third-party forked repositories`
       - check the box to `Build tags`
       - set the branch filter to `master v*` (and other branches you want to run CI for,
       e.g., `release-*`)
 
+For integration with [cryptic](https://github.com/staticfloat/cryptic-buildkite-plugin),
+a repository key should be generated and committed:
+
+```
+$ cd cryptic-buildkite-plugin
+$ ./bin/create_repo_key --public-key=agent.pub \
+                        --private=key=agent.key \
+                        --repo-root=$REPO_CHECKOUT
+
+$ cd $REPO_CHECKOUT
+$ git add .buildkite && git commit -m "Add cryptic repository keys."
+```
+
+Refer to the cryptic documentation for more details.
+
+
 ### Steps for developers
 
-Finally, you should create `.buildkite/pipeline.yml` in your repository with the steps to
+You should create `.buildkite/pipeline.yml` in your repository with the steps to
 perform GPU CI. Start from the following template:
 
 ```yaml
-env:
-  SECRET_CODECOV_TOKEN: "..."
-
 steps:
   - label: "Julia v1"
     plugins:
@@ -106,32 +119,10 @@ by the `julia` plugin) and/or instantiates your project (done by the `julia-test
 If you need to send resources across steps, use
 [artifacts](https://buildkite.com/docs/pipelines/artifacts).
 
-For coverage submission to Codecov to work, you need to encrypt your `CODECOV_TOKEN` and
-specify it as a global `SECRET_CODECOV_TOKEN` (see below).
+For coverage submission to Codecov to work, you need to encrypt your `CODECOV_TOKEN` (see below).
 
 
 
 ## Using secrets
 
-During start-up, agents will scan for `SECRET_` environment variables and decrypt their
-contents for use in the rest of the pipeline. If you want to use this mechanism to provide,
-say, a secret `CODECOV_TOKEN`, run the `encrypt` script in this repository and follow its
-prompts:
-
-
-```
-$ ./tools/encrypt
-Variable name: CODECOV_TOKEN
-Secret value:
-
-Use the following snippet in your pipeline.yml:
-
-env:
-  SECRET_CODECOV_TOKEN: "kaIXEN51HinaQ4JGclQcIgxeMMtXDb5uvnP3E2eKrH4Eruf2pKd5QwUGcIVL8+rcWeo5FWj883rNxRQEH3YeCWs6/i7vzs+ORvG51QeCNYQgNqFzPsWRcq5qJYc+JPFbisS7q9nghqWTwr52cnjarD4Xx3ceGorMyS5NvFpCNxMgqHNyGkLvipxcTTJfKZK61bpnbntoIjiIO1XSZKjcxnXFGFnolV9BHCr5v8f7F42n2tUH7X3nDHmTBr1AbO2lFAU9ra/KezHcIf0wg2HcV8LZD0+mj8q/SBPjQZSH7cxwx4Q2eTjT4Sw7xnrBGuySVm8ZPCAV7nRNEHo+VqR+GQ=="
-```
-
-If your version of OpenSSL is too old, the `./tools/encrypt` script may fail.
-In that case, you can run it inside Docker:
-```bash
-docker run --rm -it -v $(pwd):/root ubuntu bash -c 'apt update && apt install -y openssl && /root/tools/encrypt'
-```
+TODO

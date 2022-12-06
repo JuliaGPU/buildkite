@@ -1,2 +1,3 @@
-token.env
-image/secrets.private.key
+agents/token.env
+image/agent.pub
+image/agent.key

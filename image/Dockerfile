@@ -1,10 +1,12 @@
-
-
 ARG base=ubuntu:latest
 FROM $base
 
+# install dependencies for Buildkite and its plugins
+# (notably julia-buildkite-plugin and cryptic-buildkite-plugin)
 RUN apt-get update && \
-    DEBIAN_FRONTEND=noninteractive apt-get install -y curl wget apt-transport-https openssl gnupg2 python3
+    DEBIAN_FRONTEND=noninteractive apt-get install -y \
+      curl wget apt-transport-https gnupg2 python3 python3-pip openssl jq && \
+    pip install --no-cache-dir shyaml
 
 RUN wget -O- https://keys.openpgp.org/vks/v1/by-fingerprint/32A37959C2FA5C3C99EFBC32A79206696452D198 > \
       /tmp/buildkite-agent-archive-keyring.gpg && \
@@ -15,7 +17,10 @@ RUN wget -O- https://keys.openpgp.org/vks/v1/by-fingerprint/32A37959C2FA5C3C99EF
     apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y buildkite-agent
 
-COPY secrets.private.key /
+RUN rm -rf /var/lib/apt/lists/*
+
+COPY agent.pub agent.key /secrets/
+
 COPY hooks /hooks
 
 ENTRYPOINT ["buildkite-agent"]
