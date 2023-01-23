@@ -62,6 +62,7 @@ Next, a BuildKite admin should set-up a pipeline for your repository:
        branches: "!gh-pages"
        agents:
          queue: "juliagpu"
+         os: "linux"
    ```
 
 3. Navigate to the Pipeline Settings.
