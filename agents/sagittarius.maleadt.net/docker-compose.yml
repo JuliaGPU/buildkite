@@ -8,7 +8,7 @@ services:
     build:
       context: ../../image/
       args:
-        base: intel/oneapi
+        base: gcc
     devices:
       - "/dev/dri:/dev/dri"
     environment:
