@@ -15,7 +15,7 @@ services:
       args:
         base: jps/rocm-ci
     environment:
-      JULIA_NUM_THREADS: 4
+      JULIA_CPU_THREADS: 4
     devices:
       - "/dev/dri/card0:/dev/dri/card0"
       - "/dev/dri/renderD128:/dev/dri/renderD128"

@@ -13,7 +13,7 @@ services:
     environment:
       NVIDIA_DRIVER_CAPABILITIES: "compute,utility"
       NVIDIA_VISIBLE_DEVICES: "MIG-43ecbe96-9635-50f8-8f24-93a3478590d7"
-      JULIA_NUM_THREADS: 2
+      JULIA_CPU_THREADS: 2
     pid: "host" #  NVIDIA/gpu-monitoring-tools#63
     env_file: ../token.env
     command:

@@ -14,7 +14,7 @@ services:
       args:
         base: jps/rocm-ci
     environment:
-      JULIA_NUM_THREADS: 32
+      JULIA_CPU_THREADS: 32
       ROCR_VISIBLE_DEVICES: 5
     devices:
       - "/dev/dri:/dev/dri"

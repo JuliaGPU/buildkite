@@ -13,7 +13,7 @@ services:
     runtime: nvidia
     environment:
       NVIDIA_DRIVER_CAPABILITIES: "compute,utility"
-      JULIA_NUM_THREADS: 2
+      JULIA_CPU_THREADS: 2
     pid: "host" #  NVIDIA/gpu-monitoring-tools#63
     devices:
       - "/dev/dri:/dev/dri"

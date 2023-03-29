@@ -12,7 +12,7 @@ services:
     devices:
       - "/dev/dri:/dev/dri"
     environment:
-      JULIA_NUM_THREADS: 4
+      JULIA_CPU_THREADS: 4
     env_file: ../token.env
     command:
       - start

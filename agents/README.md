@@ -34,7 +34,7 @@ are installed and available. Image is based on `rocm/dev-ubuntu-20.04`.
 
 First, create a Docker Compose YAML template suitable for this agent. The
 current approach is to create an agent per GPU, limiting total parallelism (sum
-of all `JULIA_NUM_THREADS` values) to a reasonable number for this system (each
+of all `JULIA_CPU_THREADS` values) to a reasonable number for this system (each
 CUDA context takes a couple of 100s of MBs, realistic test suites easily consume
 multiple GBs of VRAM, and each Julia process also consumes multiple GBs of
 system memory).
