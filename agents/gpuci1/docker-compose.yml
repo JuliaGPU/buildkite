@@ -22,7 +22,7 @@ services:
       - start
       - --disconnect-after-job
       - --hooks-path=/hooks
-      - --tags=queue=benchmark,cuda=9.0,cuda=9.2,cuda=10.0,cuda=10.1,cuda=10.2,cuda=11.0,cuda=11.1,cuda=11.2,cuda=11.3,cuda=11.4,cap=sm_75,cap=recent,intel=gen9
+      - --tags=queue=benchmark,cuda,cap=sm_75,cap=recent,gpu=rtx2070,intel=gen9
       - --name=gpuci1
       - --priority=3
     volumes:
