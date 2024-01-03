@@ -9,7 +9,7 @@ services:
     build:
       context: ../../image/
       args:
-        base: nvidia/cuda:12.1.0-devel-ubuntu20.04
+        base: nvidia/cuda:12.3.1-devel-ubuntu20.04
     runtime: nvidia
     environment:
       NVIDIA_DRIVER_CAPABILITIES: "compute,utility"
