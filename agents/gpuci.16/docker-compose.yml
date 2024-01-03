@@ -12,7 +12,7 @@ services:
     runtime: nvidia
     environment:
       NVIDIA_DRIVER_CAPABILITIES: "compute,utility"
-      NVIDIA_VISIBLE_DEVICES: "GPU-ec68e28e-d7c6-21eb-8223-88cb012eae5c"
+      NVIDIA_VISIBLE_DEVICES: "GPU-ec68e28e-d7c6-21eb-8223-88cb012eae5c,GPU-78e95547-4024-3ebd-aa72-dea450b123e1"
       JULIA_CPU_THREADS: 2
     pid: "host" #  NVIDIA/gpu-monitoring-tools#63
     env_file: ../token.env
@@ -20,7 +20,7 @@ services:
       - start
       - --disconnect-after-job
       - --hooks-path=/hooks
-      - --tags=queue=juliagpu,cuda,cap=sm_75,gpu=rtx5000,cap=recent
+      - --tags=queue=juliagpu,cuda,cap=sm_75,gpu=rtx5000,cap=recent,multigpu
       - --name=gpuci.16
       - --priority=4
     volumes:
