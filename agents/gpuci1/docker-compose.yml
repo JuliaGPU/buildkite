@@ -1,5 +1,3 @@
-version: "3.8"
-
 # gpuci1 has an i7-9700K, 8 threads in total,
 # with 16GB of RAM, and 8GB of VRAM
 

@@ -1,5 +1,3 @@
-version: "3.8"
-
 # an Intel NUC 11 (NUC11PAHi7) containing a i7-1165G7 (8 threads) with 32GiB RAM
 
 services:

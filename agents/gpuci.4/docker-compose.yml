@@ -1,5 +1,3 @@
-version: "3.8"
-
 # gpuci has 2 AMD EPYC 7402 CPUs, 48 threads in total, with 504GB of RAM
 
 services:

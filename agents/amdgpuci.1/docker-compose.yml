@@ -1,5 +1,3 @@
-version: "3.8"
-
 # amdgpuci has 2 "AMD EPYC 7742 64-Core Processor"
 # with 256GB of RAM
 # eight MI100 GPUs are available, with feature string:

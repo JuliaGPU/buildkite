@@ -1,5 +1,3 @@
-version: "3.8"
-
 # amdci3 2 32 core AMD EPYC 7502s, 128 threads in total, 512 GB RAM
 
 services:
