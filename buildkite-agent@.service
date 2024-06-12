@@ -5,8 +5,7 @@ Wants=network-online.target
 After=docker.service network-online.target
 PartOf=docker.service
 
-StartLimitIntervalSec=60
-StartLimitBurst=10
+StartLimitIntervalSec=0
 
 
 [Service]
