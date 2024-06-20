@@ -1,0 +1,21 @@
+#!/bin/bash
+set -euo pipefail
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+
+read -sp 'Encrypted value: ' secret
+
+encrypted_key=$(echo "$secret" | cut -d ';' -f 1)
+keyfile=$(mktemp)
+echo "$encrypted_key" |
+    openssl base64 -d -A |
+    openssl rsautl -decrypt -inkey $DIR/../image/secrets.private.key -out "$keyfile"
+
+encrypted_value=$(echo "$secret" | cut -d ';' -f 2)
+value=$(echo "$encrypted_value" |
+        openssl base64 -d -A |
+        openssl enc -d -aes-256-cbc -pbkdf2 -iter 100000 -pass "file:$keyfile")
+
+echo $value
+
+shred -u $keyfile
