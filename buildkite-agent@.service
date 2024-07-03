@@ -20,6 +20,8 @@ ExecStart=/usr/local/bin/docker-compose up --force-recreate --exit-code-from bui
 Restart=always
 RestartSec=1s
 
+StandardOutput=null
+
 
 [Install]
 WantedBy=multi-user.target
