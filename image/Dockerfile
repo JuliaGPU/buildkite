@@ -4,7 +4,7 @@ ARG base=ubuntu:latest
 FROM $base
 
 RUN apt-get update && \
-    DEBIAN_FRONTEND=noninteractive apt-get install -y curl wget apt-transport-https openssl gnupg2 python3 zstd
+    DEBIAN_FRONTEND=noninteractive apt-get install -y curl wget apt-transport-https openssl gnupg2 python3 zstd gdb
 
 RUN wget -O- https://keys.openpgp.org/vks/v1/by-fingerprint/32A37959C2FA5C3C99EFBC32A79206696452D198 > \
       /tmp/buildkite-agent-archive-keyring.gpg && \
