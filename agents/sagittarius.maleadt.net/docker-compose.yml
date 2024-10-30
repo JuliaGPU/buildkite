@@ -6,7 +6,7 @@ services:
     build:
       context: ../../image/
       args:
-        base: gcc
+        base: docker.io/library/gcc
     devices:
       - "/dev/dri:/dev/dri"
     environment:
