@@ -49,29 +49,8 @@ On the agent host, clone this repository and add an appropriate `token.env` and
 # chmod 600       agents/token.env image/secrets.private.key
 ```
 
-Make sure a recent version of `docker-compose` is available:
-
-```
-# curl -L "https://github.com/docker/compose/releases/download/1.27.4/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-# chmod +x /usr/local/bin/docker-compose
-```
-
 If running GPU jobs, make sure the [NVIDIA container
-runtime](https://github.com/NVIDIA/nvidia-container-runtime) is installed. Note
-that the latest docker-compose does not support the new `--gpus` flag yet, so
-`docker --runtime nvidia` still needs to work. You can hack this by adding the
-following to `/etc/docker/daemon.json`:
-
-```json
-{
-    "runtimes": {
-        "nvidia": {
-            "path": "/usr/bin/nvidia-container-runtime",
-            "runtimeArgs": []
-        }
-    }
-}
-```
+runtime](https://github.com/NVIDIA/nvidia-container-runtime) is installed.
 
 Install the `buildkite-agent` systemd unit:
 
