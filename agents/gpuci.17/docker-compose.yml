@@ -1,0 +1,25 @@
+# gpuci has 2 AMD EPYC 7402 CPUs, 48 threads in total, with 504GB of RAM
+
+services:
+  buildkite:
+    hostname: gpuci.17
+    build:
+      context: ../../image/
+      args:
+        base: nvidia/cuda:12.6.2-devel-ubuntu22.04
+    runtime: nvidia
+    environment:
+      NVIDIA_DRIVER_CAPABILITIES: "compute,utility"
+      NVIDIA_VISIBLE_DEVICES: "GPU-25e05297-21b1-31f3-f51d-27cdee478e0b"
+      JULIA_CPU_THREADS: 2
+    pid: "host" #  NVIDIA/gpu-monitoring-tools#63
+    env_file: ../token.env
+    command:
+      - start
+      - --disconnect-after-job
+      - --hooks-path=/hooks
+      - --tags=queue=juliagpu,cuda,cap=sm_75,gpu=rtx5000,cap=recent,exclusive=true
+      - --name=gpuci.17
+      - --priority=4
+    volumes:
+      - /home/buildkite/gpuci.17:/root
