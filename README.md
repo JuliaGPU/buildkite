@@ -68,7 +68,11 @@ Next, a BuildKite admin should set-up a pipeline for your repository:
 
    a. Under general settings, make the pipeline public by clicking the big green button.
 
-   b. Under GitHub settings
+   b. Under Builds settings, in the "Build Skipping" section check the options "Skip Intermediate Builds" and "Cancel Intermediate Builds".
+      For "Cancel Intermediate Builds", add `!master !main` not to apply the cancellation of intermediate jobs for jobs named `master` or `main`.
+      When done, click on the "Save Build Skipping" button.
+
+   c. Under GitHub settings
    
       - check the box to `Build pull requests from third-party forked repositories`
       - check the box to `Build tags`
