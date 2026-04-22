@@ -6,12 +6,13 @@ services:
     build:
       context: ../../image/
       args:
-        base: nvidia/cuda:13.0.2-devel-ubuntu24.04
+        base: nvidia/cuda:13.2.1-devel-ubuntu24.04
     runtime: nvidia
     environment:
       NVIDIA_DRIVER_CAPABILITIES: "compute,utility"
       NVIDIA_VISIBLE_DEVICES: "MIG-b8003f6b-3377-59d6-8e43-6f087b3fad50"
       JULIA_CPU_THREADS: 2
+      LD_LIBRARY_PATH: ""
     pid: "host" #  NVIDIA/gpu-monitoring-tools#63
     env_file: ../token.env
     command:
