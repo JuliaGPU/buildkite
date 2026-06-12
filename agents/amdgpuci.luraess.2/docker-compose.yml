@@ -4,8 +4,8 @@ services:
     build:
       context: ../../image/
       args:
-        base: luraess/rocm-ci:7.2.3 # must match the name of the docker image,
-    environment:                    # which one creates using: `sudo docker build -t luraess/rocm-ci:7.2.3 --build-arg base=rocm/dev-ubuntu-24.04:7.2.3-complete .`
+        base: rocm/dev-ubuntu-24.04:7.2.3-complete
+    environment:
       JULIA_CPU_THREADS: 4
       ROCR_VISIBLE_DEVICES: 0
     devices:
@@ -14,7 +14,7 @@ services:
     security_opt:
       - seccomp:unconfined
     privileged: true
-    env_file: ../../token.env
+    env_file: ../token.env
     command:
       - start
       - --disconnect-after-job
@@ -23,4 +23,4 @@ services:
       - --name=amdgpu2.luraess.com
       - --priority=1
     volumes:
-      - /home/lraess/data/amdgpu_ci/buildkite/1:/root
+      - /home/buildkite/amdgpuci.luraess.2:/root
