@@ -60,8 +60,6 @@ Next, a BuildKite admin should set-up a pipeline for your repository:
      - label: ":buildkite: Pipeline upload"
        command: buildkite-agent pipeline upload
        branches: "!gh-pages"
-       agents:
-         queue: "juliagpu"
    ```
 
 3. Navigate to the Pipeline Settings.
