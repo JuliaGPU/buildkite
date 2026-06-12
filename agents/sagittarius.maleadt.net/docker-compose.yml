@@ -16,7 +16,7 @@ services:
       - start
       - --disconnect-after-job
       - --hooks-path=/hooks
-      - --tags=queue=juliagpu,intel=gen12
+      - --tags=queue=oneapi
       - --name=sagittarius.maleadt.net
     volumes:
       - /home/buildkite:/root

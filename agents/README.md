@@ -1,28 +1,30 @@
 # Available agents
 
-All JuliaGPU agents are put under the `juliagpu` queue, so you should always include the
-`queue: "juliagpu"` line in the `agents` block of your steps. Then, you should select which
-kind of GPU runner you are interested in.
+All JuliaGPU agents are part of the [JuliaGPU
+cluster](https://buildkite.com/organizations/julialang/clusters/b20f6e32-1a01-4a61-adf4-ff393b684836/queues),
+and are registered with a queue that indicates the kind of GPU runner, e.g., `queue: "cuda"`
+in the `agents` block of your steps. Additional labels can be used to select specific
+hardware.
 
 ## `cuda`
 
-These agents have one or more CUDA GPUs available, and can be used with CUDA.jl. The value
-of the `cuda` label indicates which CUDA version is supported by the driver on this agent,
-in case you need a specific CUDA version. If not, specify `cuda: "*"` to select any
-CUDA-capable agent.
+These agents have one or more CUDA GPUs available, and can be used with CUDA.jl.
 
-Similarly, these agents have a `cap` label to select on device capability, e.g. `sm_75`. A
+These agents have a `cap` label to select on device capability, e.g. `sm_75`. A
 shorthand `cap: "recent"` can be used to select a range of GPUs with a recent-enough compute
 capability.
 
-Finally, if you need multiple GPUs for your tests you can request the `multigpu` label, and
+If you need multiple GPUs for your tests you can request the `multigpu` label, and
 for tests that need an X server there is the `xorg` label. Few agents have these label, so
 don't do so needlessly.
 
-## `intel`
+Agents intended for benchmarking carry the `benchmark` label and run at the lowest
+priority, so that regular CI jobs prefer the other agents. Conversely, benchmark jobs
+should request `benchmark: "true"` to land on these agents.
 
-These agents have an oneAPI-capable GPU for use with oneAPI.jl. The value of the `intel` tag
-indicates the hardware generation, e.g. `gen9`.
+## `oneapi`
+
+These agents have an oneAPI-capable GPU for use with oneAPI.jl.
 
 ## `rocm`
 

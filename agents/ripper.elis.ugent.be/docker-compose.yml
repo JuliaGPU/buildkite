@@ -20,8 +20,8 @@ services:
       - start
       - --disconnect-after-job
       - --hooks-path=/hooks
-      - --tags=queue=benchmark,cuda,cap=sm_89,cap=recent,gpu=rtx4070
+      - --tags=queue=cuda,cap=sm_89,cap=recent,gpu=rtx4070,benchmark=true
       - --name=ripper
-      - --priority=3
+      - --priority=0
     volumes:
       - /home/buildkite:/root

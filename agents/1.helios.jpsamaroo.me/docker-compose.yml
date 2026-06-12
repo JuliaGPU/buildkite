@@ -26,7 +26,7 @@ services:
       - start
       - --disconnect-after-job
       - --hooks-path=/hooks
-      - --tags=queue=juliagpu,rocm
+      - --tags=queue=rocm
       - --name=1.helios.jpsamaroo.me
       - --priority=1
     volumes:

@@ -19,7 +19,7 @@ services:
       - start
       - --disconnect-after-job
       - --hooks-path=/hooks
-      - --tags=queue=juliagpu,cuda,cap=sm_80,gpu=a100,cap=recent
+      - --tags=queue=cuda,cap=sm_80,gpu=a100,cap=recent
       - --name=gpuci.11
       - --priority=4
     volumes:

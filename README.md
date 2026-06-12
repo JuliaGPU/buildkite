@@ -53,6 +53,8 @@ Next, a BuildKite admin should set-up a pipeline for your repository:
 
    c. Grant permission to the JuliaGPU team.
 
+   d. Select the JuliaGPU cluster.
+
 2. Use the following steps, and click `Save and Close`:
 
    ```yaml
@@ -95,8 +97,7 @@ steps:
       - JuliaCI/julia-coverage#v1:
           codecov: true
     agents:
-      queue: "juliagpu"
-      cuda: "*"
+      queue: "cuda"
     if: build.message !~ /\[skip tests\]/
     timeout_in_minutes: 60
 ```

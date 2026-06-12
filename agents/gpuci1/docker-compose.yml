@@ -21,8 +21,8 @@ services:
       - start
       - --disconnect-after-job
       - --hooks-path=/hooks
-      - --tags=queue=benchmark,cuda,cap=sm_75,cap=recent,gpu=rtx2070,intel=gen9
+      - --tags=queue=cuda,cap=sm_75,cap=recent,gpu=rtx2070,benchmark=true
       - --name=gpuci1
-      - --priority=3
+      - --priority=0
     volumes:
       - /home/buildkite:/root
