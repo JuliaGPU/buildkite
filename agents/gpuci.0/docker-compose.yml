@@ -1,5 +1,5 @@
-# CPU-only agents for the `upload` queue, handling pipeline upload jobs.
-# These don't need the CUDA image or a GPU, just the plain Ubuntu base.
+# CPU-only agent for the `upload` queue, handling pipeline upload jobs.
+# It doesn't need the CUDA image or a GPU, just the plain Ubuntu base.
 
 services:
   buildkite:
@@ -14,9 +14,6 @@ services:
       - --disconnect-after-job
       - --hooks-path=/hooks
       - --tags=queue=upload
-      - --name=gpuci.0.%spawn
-      # each spawned agent runs a single job, after which the container exits
-      # and systemd restarts it, so capacity cycles between 4 and 1 agents
-      - --spawn=4
+      - --name=gpuci.0
     volumes:
       - /home/buildkite/gpuci.0:/root
