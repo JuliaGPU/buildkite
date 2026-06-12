@@ -13,7 +13,7 @@ AGENT_NAME="$(basename "${AGENT_DIR}")"
 
 USER_HOME="/Users/julia"
 SCRATCH="${USER_HOME}/scratch"   # wiped between jobs
-CACHE="${USER_HOME}/cache"       # persistent (git mirrors); build dir wiped
+CACHE="${USER_HOME}/cache"       # persistent (git mirrors, Julia installs/depots); build dir wiped
 SECRETS="${USER_HOME}/secrets"   # token.env + secrets.private.key, mode 700
 
 # launchd daemons get a minimal environment; set up our own. The brew
@@ -21,6 +21,11 @@ SECRETS="${USER_HOME}/secrets"   # token.env + secrets.private.key, mode 700
 export PATH="/opt/homebrew/opt/openssl@3/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/bin:/bin:/usr/sbin:/sbin"
 source "${SECRETS}/token.env"
 export BUILDKITE_AGENT_TOKEN
+
+# Point the julia-buildkite-plugin at the persistent cache directory:
+# its default of ~/.cache would land in the per-job scratch HOME, forcing
+# every job to re-download Julia and rebuild its depot.
+export BUILDKITE_PLUGIN_JULIA_CACHE_DIR="${CACHE}/julia"
 
 # e.g. "Apple M1 Pro" -> "m1_pro"
 GPU="$(sysctl -n machdep.cpu.brand_string | sed 's/^Apple //' | tr 'A-Z ' 'a-z_')"
