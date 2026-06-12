@@ -6,6 +6,21 @@ and are registered with a queue that indicates the kind of GPU runner, e.g., `qu
 in the `agents` block of your steps. Additional labels can be used to select specific
 hardware.
 
+## `upload`
+
+CPU-only agents for lightweight jobs, in particular the initial pipeline upload step.
+Routing these to a dedicated queue keeps builds starting even when the GPU queues are
+full, and avoids wasting a GPU agent on a job that only needs a checkout. Pipelines
+should target this queue in their default steps:
+
+```yaml
+steps:
+  - label: ":pipeline:"
+    command: buildkite-agent pipeline upload
+    agents:
+      queue: "upload"
+```
+
 ## `cuda`
 
 These agents have one or more CUDA GPUs available, and can be used with CUDA.jl.
@@ -30,6 +45,13 @@ These agents have an oneAPI-capable GPU for use with oneAPI.jl.
 
 These agents have one AMD GPU for use with AMDGPU.jl. Most necessary ROCm external libraries
 are installed and available. Image is based on `rocm/dev-ubuntu-20.04`.
+
+## `metal`
+
+macOS agents with an Apple Silicon GPU, for use with Metal.jl. These do not use Docker, but
+run the buildkite-agent in a Seatbelt sandbox; see [monoceros.1/README.md](monoceros.1/README.md).
+A `gpu` label (e.g. `m1`) can be used to select specific hardware, and `macos_version` to
+select the OS version.
 
 
 # Adding an agent
