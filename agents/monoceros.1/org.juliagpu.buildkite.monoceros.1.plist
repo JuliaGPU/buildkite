@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>org.juliagpu.buildkite.monoceros.1</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>/bin/bash</string>
+        <string>/Users/julia/juliagpu-buildkite/agents/monoceros.1/wrapper.sh</string>
+    </array>
+
+    <!-- run as the unprivileged CI user; daemons start at boot without
+         requiring a login session -->
+    <key>UserName</key>
+    <string>julia</string>
+    <key>GroupName</key>
+    <string>staff</string>
+
+    <key>WorkingDirectory</key>
+    <string>/Users/julia</string>
+
+    <key>RunAtLoad</key>
+    <true/>
+
+    <!-- restart on crashes, but not when the wrapper exits 0 (graceful
+         agent termination) -->
+    <key>KeepAlive</key>
+    <dict>
+        <key>SuccessfulExit</key>
+        <false/>
+    </dict>
+
+    <key>StandardOutPath</key>
+    <string>/Users/julia/agent.log</string>
+    <key>StandardErrorPath</key>
+    <string>/Users/julia/agent.log</string>
+</dict>
+</plist>
