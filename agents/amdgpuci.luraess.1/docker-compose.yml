@@ -1,0 +1,26 @@
+services:
+  buildkite:
+    hostname: amdgpu1.luraess.com
+    build:
+      context: ../../image/
+      args:
+        base: rocm/dev-ubuntu-24.04:7.2.3-complete
+    environment:
+      JULIA_CPU_THREADS: 4
+      ROCR_VISIBLE_DEVICES: 0
+    devices:
+      - "/dev/dri:/dev/dri"
+      - "/dev/kfd:/dev/kfd"
+    security_opt:
+      - seccomp:unconfined
+    privileged: true
+    env_file: ../token.env
+    command:
+      - start
+      - --disconnect-after-job
+      - --hooks-path=/hooks
+      - --tags=queue=rocm,rocmgpu=gfx1100
+      - --name=amdgpu1.luraess.com
+      - --priority=1
+    volumes:
+      - /home/buildkite/amdgpuci.luraess.1:/root
