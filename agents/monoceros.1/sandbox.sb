@@ -1,0 +1,77 @@
+; Seatbelt profile for the JuliaGPU macOS Metal agents.
+;
+; The buildkite-agent (and thus every job) runs inside this sandbox via
+; sandbox-exec. Jobs get full access to the agent scratch/cache directories
+; under /Users/julia, read-only access to the system, and no access to
+; anything else (in particular: no reading other users' data, no writes
+; outside the scratch area).
+;
+; Verified on macOS 26: Metal compute (device access via IOKit, runtime
+; shader compilation via the MTLCompilerService XPC service) works under
+; this profile.
+
+(version 1)
+(deny default)
+(import "bsd.sb")
+
+; process basics
+(allow process-fork)
+(allow process-exec)
+(allow process-info*)
+(allow process-codesigning-status*)
+(allow signal)
+(allow mach-lookup)
+(allow sysctl-read)
+(allow system-fsctl)
+(allow pseudo-tty)
+(allow ipc-posix-sem)
+(allow ipc-sysv-shm)
+(allow ipc-posix-shm)
+
+; GPU access (Metal opens an IOKit user client for the device)
+(allow iokit-open-user-client)
+
+; network
+(allow network-bind)
+(allow network-outbound)
+(allow network-inbound)
+(allow system-socket)
+
+; read-only access to the system. Note: NOT /Users; only the non-recursive
+; path entries below expose the parental chain of the scratch directories.
+(allow file-read*
+    (subpath "/Applications")
+    (subpath "/Library")
+    (subpath "/System")
+    (subpath "/bin")
+    (subpath "/dev")
+    (subpath "/opt")
+    (subpath "/private/etc")
+    (subpath "/private/var")
+    (subpath "/sbin")
+    (subpath "/usr")
+    (subpath "/var")
+    (path "/tmp")
+    (path "/etc")
+    (path "/private")
+    (path "/Users")
+    (path "/Users/julia")
+
+    ; the agent configuration (hooks, this profile); root-owned
+    (subpath "/Users/julia/juliagpu-buildkite")
+)
+
+; read-write access to the agent work area only
+(allow file*
+    (subpath "/Users/julia/scratch")
+    (subpath "/Users/julia/cache")
+
+    ; per-user cache/temp dirs (Metal shader cache lives here); the wrapper
+    ; wipes the julia user's entries between jobs
+    (subpath "/private/var/folders")
+
+    ; terminal handling
+    (regex #"/dev/tty.*")
+    (path "/dev/ptmx")
+    (subpath "/dev/fd")
+)
