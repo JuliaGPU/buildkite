@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>org.juliagpu.buildkite.monoceros.1.cleanup</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>/bin/bash</string>
+        <string>/Users/julia/juliagpu-buildkite/agents/monoceros.1/cleanup.sh</string>
+    </array>
+
+    <key>UserName</key>
+    <string>julia</string>
+    <key>GroupName</key>
+    <string>staff</string>
+
+    <key>WorkingDirectory</key>
+    <string>/Users/julia</string>
+
+    <!-- daily at 03:00; unlike cron, launchd runs the job at next wake if
+         the machine was asleep at the scheduled time -->
+    <key>StartCalendarInterval</key>
+    <dict>
+        <key>Hour</key>
+        <integer>3</integer>
+        <key>Minute</key>
+        <integer>0</integer>
+    </dict>
+
+    <key>StandardOutPath</key>
+    <string>/Users/julia/cleanup.log</string>
+    <key>StandardErrorPath</key>
+    <string>/Users/julia/cleanup.log</string>
+</dict>
+</plist>

@@ -16,6 +16,10 @@ respectively). The moving parts:
   `julia` user.
 - `hooks/environment`: macOS-adapted version of `image/hooks/environment`
   for secrets decryption.
+- `cleanup.sh` + `org.juliagpu.buildkite.monoceros.1.cleanup.plist`: daily
+  LaunchDaemon that prunes least-recently-used Julia depots from the
+  persistent cache when the disk fills up (the cron.daily equivalent on the
+  Linux agents).
 
 ## Host setup
 
@@ -41,10 +45,11 @@ sudo -u julia mkdir -m 700 /Users/julia/secrets
 sudo chown julia /Users/julia/secrets/*
 sudo chmod 600 /Users/julia/secrets/*
 
-# the agent service
-sudo cp /Users/julia/juliagpu-buildkite/agents/monoceros.1/org.juliagpu.buildkite.monoceros.1.plist /Library/LaunchDaemons/
-sudo chown root:wheel /Library/LaunchDaemons/org.juliagpu.buildkite.monoceros.1.plist
+# the agent and cleanup services
+sudo cp /Users/julia/juliagpu-buildkite/agents/monoceros.1/org.juliagpu.buildkite.monoceros.1*.plist /Library/LaunchDaemons/
+sudo chown root:wheel /Library/LaunchDaemons/org.juliagpu.buildkite.monoceros.1*.plist
 sudo launchctl bootstrap system /Library/LaunchDaemons/org.juliagpu.buildkite.monoceros.1.plist
+sudo launchctl bootstrap system /Library/LaunchDaemons/org.juliagpu.buildkite.monoceros.1.cleanup.plist
 
 # come back up after power loss; never sleep
 sudo pmset autorestart 1 sleep 0 disksleep 0
@@ -58,4 +63,9 @@ the service:
 sudo launchctl kickstart -k system/org.juliagpu.buildkite.monoceros.1
 ```
 
-Logs end up in `/Users/julia/agent.log`.
+Logs end up in `/Users/julia/agent.log` (agent) and `/Users/julia/cleanup.log`
+(depot cleanup). To run the cleanup on demand:
+
+```sh
+sudo launchctl kickstart system/org.juliagpu.buildkite.monoceros.1.cleanup
+```
