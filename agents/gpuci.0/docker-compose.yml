@@ -12,6 +12,9 @@ services:
     command:
       - start
       - --disconnect-after-job
+      # with the default streaming ping mode, disconnect-after-job is only
+      # evaluated on the stream's 60s tick, wasting a minute per job
+      - --ping-mode=poll-only
       - --hooks-path=/hooks
       - --tags=queue=upload
       - --name=gpuci.0
