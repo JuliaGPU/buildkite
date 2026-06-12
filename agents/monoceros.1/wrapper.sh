@@ -31,7 +31,8 @@ while true; do
     # Give the job a pristine environment
     chmod -R u+w "${SCRATCH}" "${CACHE}/build" 2>/dev/null
     rm -rf "${SCRATCH}" "${CACHE}/build"
-    mkdir -p "${SCRATCH}/home" "${SCRATCH}/tmp" "${CACHE}/build" "${CACHE}/repos"
+    mkdir -p "${SCRATCH}/home" "${SCRATCH}/tmp" "${SCRATCH}/plugins" \
+             "${CACHE}/build" "${CACHE}/repos"
 
     # Also wipe this user's per-user cache/temp dirs (Metal shader cache,
     # etc.), which live under /private/var/folders and are writable from
@@ -51,6 +52,7 @@ while true; do
             --disconnect-after-job \
             --hooks-path="${AGENT_DIR}/hooks" \
             --build-path="${CACHE}/build" \
+            --plugins-path="${SCRATCH}/plugins" \
             --git-mirrors-path="${CACHE}/repos" \
             --tags="queue=metal,arch=aarch64,gpu=${GPU},macos_version=$(sw_vers -productVersion)" \
             --name="${AGENT_NAME}"
