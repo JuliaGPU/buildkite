@@ -1,0 +1,26 @@
+services:
+  buildkite:
+    hostname: amdgpu2.luraess.com
+    build:
+      context: ../../image/
+      args:
+        base: luraess/rocm-ci:7.2.3 # must match the name of the docker image,
+    environment:                    # which one creates using: `sudo docker build -t luraess/rocm-ci:7.2.3 --build-arg base=rocm/dev-ubuntu-24.04:7.2.3-complete .`
+      JULIA_CPU_THREADS: 4
+      ROCR_VISIBLE_DEVICES: 0
+    devices:
+      - "/dev/dri:/dev/dri"
+      - "/dev/kfd:/dev/kfd"
+    security_opt:
+      - seccomp:unconfined
+    privileged: true
+    env_file: ../../token.env
+    command:
+      - start
+      - --disconnect-after-job
+      - --hooks-path=/hooks
+      - --tags=queue=rocm,rocmgpu=gfx1101
+      - --name=amdgpu2.luraess.com
+      - --priority=1
+    volumes:
+      - /home/lraess/data/amdgpu_ci/buildkite/1:/root
