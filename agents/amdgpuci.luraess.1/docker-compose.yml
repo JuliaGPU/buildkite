@@ -23,4 +23,4 @@ services:
       - --name=amdgpu1.luraess.com
       - --priority=1
     volumes:
-      - /home/buildkite/amdgpuci.luraess.1:/root
+      - /data/buildkite/amdgpuci.luraess.1:/root
