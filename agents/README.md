@@ -44,7 +44,7 @@ These agents have an oneAPI-capable GPU for use with oneAPI.jl.
 ## `rocm`
 
 These agents have one AMD GPU for use with AMDGPU.jl. Most necessary ROCm external libraries
-are installed and available. Image is based on `rocm/dev-ubuntu-20.04`.
+are installed and available.
 
 ## `metal`
 
