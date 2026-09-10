@@ -4,6 +4,8 @@
 # file baked into a container image, and GNU shred is not available.
 set -euo pipefail
 
+# see image/hooks/environment
+export BUILDKITE_AGENT_PIPELINE_UPLOAD_ALLOW_SECRETS=true
 
 # only decrypt secrets if this is a trusted environment (i.e., not a third-party PR)
 if [[ "${BUILDKITE_PULL_REQUEST}" == "false" ||

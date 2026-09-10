@@ -1,6 +1,11 @@
 #!/bin/bash
 set -euo pipefail
 
+# Agent v4 refuses to upload pipelines that contain the value of an environment
+# variable with a secret-looking name. Our pipelines define encrypted SECRET_*
+# blobs in their top-level `env:` block, which trips this check on the encrypted
+# value; the decrypted values never reach the upload anyway.
+export BUILDKITE_AGENT_PIPELINE_UPLOAD_ALLOW_SECRETS=true
 
 # only decrypt secrets if this is a trusted environment (i.e., not a third-party PR)
 if [[ "${BUILDKITE_PULL_REQUEST}" == "false" ||
