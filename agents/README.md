@@ -33,6 +33,10 @@ If you need multiple GPUs for your tests you can request the `multigpu` label, a
 for tests that need an X server there is the `xorg` label. Few agents have these label, so
 don't do so needlessly.
 
+Some agents share their GPU with another agent, and carry the `shared` label. Tests that
+need a whole GPU to themselves (e.g., because they measure memory usage or performance)
+should request `exclusive: "true"`.
+
 Agents intended for benchmarking carry the `benchmark` label and run at the lowest
 priority, so that regular CI jobs prefer the other agents. Conversely, benchmark jobs
 should request `benchmark: "true"` to land on these agents.
