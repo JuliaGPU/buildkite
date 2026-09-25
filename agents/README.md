@@ -89,3 +89,11 @@ Finally, enable and start the buildkite agents:
 # systemctl enable --now buildkite-agent@AGENT
 # ...
 ```
+
+Agents that keep Julia depots under `/home/buildkite` should also install the depot
+sweeper, which removes the least recently used depots when storage runs low. It is aware
+of ZFS deduplication, and is symlinked so that updates to this repository apply directly:
+
+```
+# ln -s /etc/buildkite/tools/depot-sweeper /etc/cron.hourly/buildkite
+```

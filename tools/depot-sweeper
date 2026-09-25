@@ -1,0 +1,139 @@
+#!/bin/bash
+# Remove the least recently used Julia depots of the Buildkite agents when the
+# depot storage runs low. Installed as /etc/cron.hourly/buildkite (a symlink to
+# this file, so updates to the repository take effect without reinstalling).
+#
+# On ZFS, the dataset's `df` usage counts every copy of a deduplicated block, so
+# with one depot per agent it vastly overstates the space actually consumed. We
+# therefore look at the pool's physical capacity instead, and separately make
+# sure a dataset quota (which ZFS does account before deduplication) isn't hit.
+
+set -euo pipefail
+
+BUILDKITE_PATH="${BUILDKITE_PATH:-/home/buildkite}"
+DEPOT_PATTERN="${DEPOT_PATTERN:-*/.cache/julia-buildkite-plugin*/depots}"
+LOG_FILE="${LOG_FILE:-/var/log/julia-depot-cleanup.log}"
+DRY_RUN="${DRY_RUN:-false}"
+
+# plain filesystems: `df` usage; ZFS: physical pool capacity
+THRESHOLD_PERCENT="${THRESHOLD_PERCENT:-75}"
+POOL_THRESHOLD_PERCENT="${POOL_THRESHOLD_PERCENT:-70}"
+# ZFS quotas are accounted before deduplication, and writes fail beyond them
+QUOTA_THRESHOLD_PERCENT="${QUOTA_THRESHOLD_PERCENT:-90}"
+
+# depots used this recently likely belong to an active pipeline
+RECENT_ACTIVITY_MINUTES="${RECENT_ACTIVITY_MINUTES:-180}"
+# after deduplication, removing one copy of a depot may free little space, so
+# bound the damage a single run can do when the space doesn't come back
+MAX_REMOVALS="${MAX_REMOVALS:-50}"
+
+log() {
+    echo "$(date '+%Y-%m-%d %H:%M:%S') - $1" | tee -a "$LOG_FILE"
+}
+
+fstype=$(findmnt -n -o FSTYPE --target "$BUILDKITE_PATH")
+if [[ $fstype == zfs ]]; then
+    dataset=$(findmnt -n -o SOURCE --target "$BUILDKITE_PATH")
+    pool=${dataset%%/*}
+fi
+
+# Print a description of the current usage, and return success if it exceeds
+# the thresholds.
+over_threshold() {
+    if [[ $fstype == zfs ]]; then
+        # make pending frees visible before measuring
+        zpool sync "$pool" 2>/dev/null || true
+
+        local cap quota used quota_pct=0
+        cap=$(zpool list -Hp -o capacity "$pool")
+        read -r quota used < <(zfs get -Hp -o value quota,used "$dataset" | paste -sd' ')
+        if [[ $quota -gt 0 ]]; then
+            quota_pct=$((100 * used / quota))
+        fi
+        echo "pool $pool ${cap}% (threshold ${POOL_THRESHOLD_PERCENT}%), dataset $dataset ${quota_pct}% of quota (threshold ${QUOTA_THRESHOLD_PERCENT}%)"
+        [[ $cap -ge $POOL_THRESHOLD_PERCENT || $quota_pct -ge $QUOTA_THRESHOLD_PERCENT ]]
+    else
+        local usage
+        usage=$(df --output=pcent "$BUILDKITE_PATH" | tail -1 | tr -dc '0-9')
+        echo "$BUILDKITE_PATH ${usage}% (threshold ${THRESHOLD_PERCENT}%)"
+        [[ $usage -ge $THRESHOLD_PERCENT ]]
+    fi
+}
+
+# The depot directory's own mtime only changes when top-level entries are
+# added, so also consider Pkg's usage log, which is rewritten on every use.
+last_used() {
+    local dir=$1 t
+    t=$(stat -c %Y "$dir")
+    if [[ -f $dir/logs/manifest_usage.toml ]]; then
+        local u
+        u=$(stat -c %Y "$dir/logs/manifest_usage.toml")
+        [[ $u -gt $t ]] && t=$u
+    fi
+    echo "$t"
+}
+
+# depot directories, least recently used first
+get_depot_dirs() {
+    find "$BUILDKITE_PATH" -maxdepth 6 -path "*/$DEPOT_PATTERN/*" -type d \
+        -name "[0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f]-*" \
+        2>/dev/null |
+    while IFS= read -r dir; do
+        echo "$(last_used "$dir") $dir"
+    done | sort -n | cut -d' ' -f2-
+}
+
+cleanup_depots() {
+    local status
+    if ! status=$(over_threshold); then
+        log "Usage below threshold: $status"
+        return 0
+    fi
+    log "Usage exceeds threshold: $status. Starting cleanup..."
+
+    local dirs_removed=0
+    while IFS= read -r dir; do
+        [[ -z $dir ]] && continue
+        if ! status=$(over_threshold); then
+            log "Target usage achieved: $status"
+            break
+        fi
+        if [[ $dirs_removed -ge $MAX_REMOVALS ]]; then
+            log "Removed $MAX_REMOVALS depots without freeing enough space; stopping"
+            break
+        fi
+        [[ -d $dir ]] || continue
+
+        if [[ -n $(find "$dir" -mmin -"$RECENT_ACTIVITY_MINUTES" -print -quit 2>/dev/null) ]]; then
+            log "Skipping recently-active depot: $dir"
+            continue
+        fi
+        if lsof +D "$dir" >/dev/null 2>&1; then
+            log "Skipping in-use depot: $dir"
+            continue
+        fi
+
+        log "Removing depot directory: $dir (size: $(du -sh "$dir" 2>/dev/null | cut -f1))"
+        if [[ $DRY_RUN == true ]]; then
+            log "DRY RUN: Would remove $dir"
+        elif rm -rf "$dir"; then
+            log "Successfully removed: $dir"
+        else
+            log "Error: Failed to remove $dir"
+            continue
+        fi
+        dirs_removed=$((dirs_removed + 1))
+    done < <(get_depot_dirs)
+
+    status=$(over_threshold) && over=1 || over=0
+    log "Cleanup completed. Removed $dirs_removed directories. Final usage: $status"
+    [[ $over -eq 0 ]]
+}
+
+touch "$LOG_FILE"
+if cleanup_depots; then
+    log "Cleanup job completed successfully"
+else
+    log "Cleanup job completed with warnings"
+    exit 1
+fi
