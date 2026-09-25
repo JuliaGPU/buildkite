@@ -1,12 +1,12 @@
 #!/bin/bash
-# Remove the least recently used Julia depots of the Buildkite agents when the
-# depot storage runs low. Installed as /etc/cron.hourly/buildkite (a symlink to
-# this file, so updates to the repository take effect without reinstalling).
+# Example cron job that removes the least recently used Julia depots of the
+# Buildkite agents when the depot storage runs low. This is the version used on
+# gpuci (installed as /etc/cron.hourly/buildkite); adapt it to the host before
+# installing a copy, e.g., the depot pattern depends on the agents' volume layout.
 #
-# On ZFS, the dataset's `df` usage counts every copy of a deduplicated block, so
-# with one depot per agent it vastly overstates the space actually consumed. We
-# therefore look at the pool's physical capacity instead, and separately make
-# sure a dataset quota (which ZFS does account before deduplication) isn't hit.
+# On ZFS with deduplication, `df` counts every copy of a deduplicated block, so
+# with one depot per agent it vastly overstates the space actually used. There,
+# the pool's physical capacity is checked instead.
 
 set -euo pipefail
 
@@ -15,11 +15,8 @@ DEPOT_PATTERN="${DEPOT_PATTERN:-*/.cache/julia-buildkite-plugin*/depots}"
 LOG_FILE="${LOG_FILE:-/var/log/julia-depot-cleanup.log}"
 DRY_RUN="${DRY_RUN:-false}"
 
-# plain filesystems: `df` usage; ZFS: physical pool capacity
-THRESHOLD_PERCENT="${THRESHOLD_PERCENT:-75}"
-POOL_THRESHOLD_PERCENT="${POOL_THRESHOLD_PERCENT:-70}"
-# ZFS quotas are accounted before deduplication, and writes fail beyond them
-QUOTA_THRESHOLD_PERCENT="${QUOTA_THRESHOLD_PERCENT:-90}"
+# usage threshold: `df` usage, or physical pool capacity on ZFS
+THRESHOLD_PERCENT="${THRESHOLD_PERCENT:-70}"
 
 # depots used this recently likely belong to an active pipeline
 RECENT_ACTIVITY_MINUTES="${RECENT_ACTIVITY_MINUTES:-180}"
@@ -31,33 +28,25 @@ log() {
     echo "$(date '+%Y-%m-%d %H:%M:%S') - $1" | tee -a "$LOG_FILE"
 }
 
-fstype=$(findmnt -n -o FSTYPE --target "$BUILDKITE_PATH")
-if [[ $fstype == zfs ]]; then
-    dataset=$(findmnt -n -o SOURCE --target "$BUILDKITE_PATH")
-    pool=${dataset%%/*}
+pool=
+if [[ $(findmnt -n -o FSTYPE --target "$BUILDKITE_PATH") == zfs ]]; then
+    pool=$(findmnt -n -o SOURCE --target "$BUILDKITE_PATH")
+    pool=${pool%%/*}
 fi
 
-# Print a description of the current usage, and return success if it exceeds
-# the thresholds.
+# Print the current usage, and return success if it exceeds the threshold.
 over_threshold() {
-    if [[ $fstype == zfs ]]; then
+    local usage
+    if [[ -n $pool ]]; then
         # make pending frees visible before measuring
         zpool sync "$pool" 2>/dev/null || true
-
-        local cap quota used quota_pct=0
-        cap=$(zpool list -Hp -o capacity "$pool")
-        read -r quota used < <(zfs get -Hp -o value quota,used "$dataset" | paste -sd' ')
-        if [[ $quota -gt 0 ]]; then
-            quota_pct=$((100 * used / quota))
-        fi
-        echo "pool $pool ${cap}% (threshold ${POOL_THRESHOLD_PERCENT}%), dataset $dataset ${quota_pct}% of quota (threshold ${QUOTA_THRESHOLD_PERCENT}%)"
-        [[ $cap -ge $POOL_THRESHOLD_PERCENT || $quota_pct -ge $QUOTA_THRESHOLD_PERCENT ]]
+        usage=$(zpool list -Hp -o capacity "$pool")
+        echo "pool $pool ${usage}% (threshold ${THRESHOLD_PERCENT}%)"
     else
-        local usage
         usage=$(df --output=pcent "$BUILDKITE_PATH" | tail -1 | tr -dc '0-9')
         echo "$BUILDKITE_PATH ${usage}% (threshold ${THRESHOLD_PERCENT}%)"
-        [[ $usage -ge $THRESHOLD_PERCENT ]]
     fi
+    [[ $usage -ge $THRESHOLD_PERCENT ]]
 }
 
 # The depot directory's own mtime only changes when top-level entries are

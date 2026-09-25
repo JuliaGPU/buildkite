@@ -94,10 +94,7 @@ Finally, enable and start the buildkite agents:
 # ...
 ```
 
-Agents that keep Julia depots under `/home/buildkite` should also install the depot
-sweeper, which removes the least recently used depots when storage runs low. It is aware
-of ZFS deduplication, and is symlinked so that updates to this repository apply directly:
-
-```
-# ln -s /etc/buildkite/tools/depot-sweeper /etc/cron.hourly/buildkite
-```
+Agent depots under `/home/buildkite` grow without bound, so hosts need a cron job that
+removes old ones. [`tools/examples/depot-sweeper`](../tools/examples/depot-sweeper) is
+the one used on gpuci (which stores depots on a deduplicated ZFS pool); adapt it to the
+host's storage and volume layout, and install a copy as e.g. `/etc/cron.hourly/buildkite`.
