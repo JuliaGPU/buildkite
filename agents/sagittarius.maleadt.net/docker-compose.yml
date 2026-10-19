@@ -11,6 +11,7 @@ services:
       - "/dev/dri:/dev/dri"
     environment:
       JULIA_CPU_THREADS: 4
+      NEO_CACHE_MAX_SIZE: 17179869184
     env_file: ../token.env
     command:
       - start
