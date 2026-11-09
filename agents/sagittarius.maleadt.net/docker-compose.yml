@@ -21,3 +21,17 @@ services:
       - --name=sagittarius.maleadt.net
     volumes:
       - /home/buildkite:/root
+    # Jobs run on an isolated VLAN that can only reach the internet. The network
+    # is a macvlan created on the host (see README.md); if it is missing, the
+    # agent refuses to start.
+    networks:
+      julia:
+        ipv4_address: 192.168.4.10
+    dns:
+      - 192.168.4.1
+    sysctls:
+      - net.ipv6.conf.all.disable_ipv6=1
+
+networks:
+  julia:
+    external: true
