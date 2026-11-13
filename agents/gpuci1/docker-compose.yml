@@ -21,7 +21,7 @@ services:
       - start
       - --disconnect-after-job
       - --hooks-path=/hooks
-      - --tags=queue=cuda,cap=sm_75,cap=recent,gpu=rtx2070,benchmark=true
+      - --tags=queue=cuda,cap=sm_75,gpu=rtx2070,benchmark=true
       - --name=gpuci1
       - --priority=0
     volumes:
