@@ -23,10 +23,13 @@ services:
       - /home/buildkite:/root
     # Jobs run on an isolated VLAN that can only reach the internet. The network
     # is a macvlan created on the host (see README.md); if it is missing, the
-    # agent refuses to start.
+    # agent refuses to start. The container is recreated after every job, and
+    # without a fixed MAC each instance gets a random one, which the gateway
+    # records as a new client claiming the same IP.
     networks:
       julia:
         ipv4_address: 192.168.4.10
+        mac_address: 02:00:c0:a8:04:0a
     dns:
       - 192.168.4.1
     sysctls:
